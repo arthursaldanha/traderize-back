@@ -1,0 +1,17 @@
+export enum Feature {
+  TRADE_ACCOUNTS = 'trade_accounts',
+  TRADE_JOURNAL = 'trade_journal',
+  LEARNING_LIST = 'learning_list',
+  PERFORMANCE_STATS = 'performance_stats',
+  ECONOMIC_CALENDAR = 'economic_calendar',
+  RISK_CALCULATOR = 'risk_calculator',
+  PAIR_CORRELATION = 'pair_correlation',
+  GOAL_SETTING = 'goal_setting',
+  CLASSES = 'classes',
+  COMMUNITY = 'community',
+  RANKINGS = 'rankings',
+  REWARDS = 'rewards',
+  CUSTOM_ALERTS = 'custom_alerts',
+  AI_REPORTS = 'ai_reports',
+  DATA_EXPORT = 'data_export',
+}
