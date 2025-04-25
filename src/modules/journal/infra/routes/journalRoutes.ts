@@ -6,35 +6,35 @@ import {
   createJournalSchema,
   updateJournalSchema,
 } from '@/modules/journal/application/DTOs';
-import { TradeJournalController } from '@/modules/journal/application/controllers/journal';
+import { JournalController } from '@/modules/journal/application/controllers/journal';
 
-const tradeJournalRoutes: Router = Router();
+const journalRoutes: Router = Router();
 
-tradeJournalRoutes.get(
+journalRoutes.get(
   '/:id',
   parseDataWithSchema(createJournalSchema),
   isAuthenticated,
-  TradeJournalController.findByJournalId,
+  JournalController.findByJournalId,
 );
 
-tradeJournalRoutes.get(
+journalRoutes.get(
   '/account/:accountId',
   isAuthenticated,
-  TradeJournalController.listByAccountId,
+  JournalController.listByAccountId,
 );
 
-tradeJournalRoutes.post(
+journalRoutes.post(
   '/',
   parseDataWithSchema(createJournalSchema),
   isAuthenticated,
-  TradeJournalController.create,
+  JournalController.create,
 );
 
-tradeJournalRoutes.put(
+journalRoutes.put(
   '/:id',
   parseDataWithSchema(updateJournalSchema),
   isAuthenticated,
-  TradeJournalController.update,
+  JournalController.update,
 );
 
-export { tradeJournalRoutes };
+export { journalRoutes };

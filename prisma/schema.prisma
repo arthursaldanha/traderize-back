@@ -14,7 +14,7 @@ enum UserRole {
   GUEST
 }
 
-enum TradeAccountCurrency {
+enum AccountCurrency {
   AUD
   BRL
   CAD
@@ -41,12 +41,12 @@ enum Platform {
   PROFIT
 }
 
-enum TradeDirection {
+enum Direction {
   LONG
   SHORT
 }
 
-enum TradeStatus {
+enum Status {
   PENDING
   OPEN
   PARTIAL
@@ -119,7 +119,7 @@ model Account {
   id              String               @id @default(uuid())
   userId          String
   market          Market[]
-  currency        TradeAccountCurrency @default(USD)
+  currency        AccountCurrency @default(USD)
   platform        Platform
   isPropFirm      Boolean
   broker          String
@@ -170,8 +170,8 @@ model Journal {
   result          Decimal?
   riskRewardRatio Decimal?
   imageUrls       String[]
-  status          TradeStatus
-  direction       TradeDirection
+  status          Status
+  direction       Direction
   tradeDate       DateTime
   notes           String?
   createdAt       DateTime       @default(now())

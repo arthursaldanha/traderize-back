@@ -1,8 +1,8 @@
 import { Entity } from '@/core/entity';
 import { Uuid } from '@/core/value-objects';
-import type { TradeJournalComment, TradeStrategy } from '@/core/entities';
+import type { JournalComment, Strategy } from '@/core/entities';
 
-export class TradeJournal extends Entity {
+export class Journal extends Entity {
   readonly id: Uuid;
   readonly accountId: Uuid;
   private strategyId: Uuid | null;
@@ -19,8 +19,8 @@ export class TradeJournal extends Entity {
   direction: string;
   tradeDate: Date;
   notes: string | null;
-  private comments: TradeJournalComment[] = [];
-  private strategy: TradeStrategy | null = null;
+  private comments: JournalComment[] = [];
+  private strategy: Strategy | null = null;
   readonly createdAt: Date;
   updatedAt: Date;
 
@@ -78,14 +78,14 @@ export class TradeJournal extends Entity {
     result?: number | null;
     riskRewardRatio?: number | null;
     status: string;
-    imageUrls: string[],
+    imageUrls: string[];
     direction: string;
     tradeDate: Date;
     notes?: string | null;
     createdAt?: Date;
     updatedAt?: Date;
   }) {
-    return new TradeJournal(
+    return new Journal(
       data.id ? new Uuid(data.id) : new Uuid(),
       new Uuid(data.accountId),
       data.strategyId ? new Uuid(data.strategyId) : null,
@@ -107,17 +107,17 @@ export class TradeJournal extends Entity {
     );
   }
 
-  static restore = TradeJournal.create;
+  static restore = Journal.create;
 
-  setComments(comments: TradeJournalComment[]) {
+  setComments(comments: JournalComment[]) {
     this.comments = comments;
   }
 
-  getComments(): TradeJournalComment[] {
+  getComments(): JournalComment[] {
     return this.comments;
   }
 
-  setStrategy(strategy: TradeStrategy | null) {
+  setStrategy(strategy: Strategy | null) {
     this.strategy = strategy;
     this.strategyId = strategy?.id || null;
   }
@@ -126,7 +126,7 @@ export class TradeJournal extends Entity {
     return this.strategyId;
   }
 
-  getStrategy(): TradeStrategy | null {
+  getStrategy(): Strategy | null {
     return this.strategy;
   }
 
@@ -140,7 +140,7 @@ export class TradeJournal extends Entity {
     result?: number | null;
     riskRewardRatio?: number | null;
     status: string;
-    imageUrls: string[],
+    imageUrls: string[];
     direction: string;
     tradeDate: Date;
     notes?: string | null;
@@ -176,7 +176,7 @@ export class TradeJournal extends Entity {
       riskRewardRatio: this.riskRewardRatio,
       status: this.status,
       direction: this.direction,
-      tradeDate: this.tradeDate.toISOString(),
+      Date: this.tradeDate.toISOString(),
       notes: this.notes,
       strategy: this.strategy ? this.strategy.toJSON() : null,
       comments: this.comments.map((comment) => comment.toJSON()),

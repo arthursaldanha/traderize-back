@@ -4,18 +4,18 @@ import { StatusCodes } from 'http-status-codes';
 import { ioc } from '@/ioc';
 
 import { CustomError } from '@/errors';
-import { TradeAccount, type User } from '@/core/entities';
-import { ITradeAccountRepository } from '@/repositories/account/ITradeAccountRepository';
+import { Account, type User } from '@/core/entities';
+import { IAccountRepository } from '@/repositories/account';
 
 import { PlanService } from '@/modules/subscription-plans/application/services';
-import { CreateTradeAccountDTO } from '@/modules/account/application/DTOs';
+import { CreateAccountDTO } from '@/modules/account/application/DTOs';
 import { Feature } from '@/modules/subscription-plans/domain/enums/feature';
 
 @injectable()
-export class CreateTradeAccountService {
+export class CreateAccountService {
   constructor(
-    @inject(ioc.repositories.tradeAccountRepository)
-    private tradeAccountRepository: ITradeAccountRepository,
+    @inject(ioc.repositories.accountRepository)
+    private accountRepository: IAccountRepository,
   ) {}
 
   async execute({
@@ -27,7 +27,9 @@ export class CreateTradeAccountService {
     broker,
     initialBalance,
     currentBalance,
-  }: CreateTradeAccountDTO & { user: User }): Promise<TradeAccount> {
+    credits,
+    disabled,
+  }: CreateAccountDTO & { user: User }): Promise<Account> {
     const isAllowedAccessThisService = PlanService.canAccess(
       user,
       Feature.TRADE_ACCOUNTS,
@@ -42,8 +44,7 @@ export class CreateTradeAccountService {
 
     const userId = user.id.getValue();
 
-    const existingAccounts =
-      await this.tradeAccountRepository.listByUserId(userId);
+    const existingAccounts = await this.accountRepository.listByUserId(userId);
 
     const tradeAccountRules = PlanService.getFeatureRules(
       user,
@@ -63,7 +64,7 @@ export class CreateTradeAccountService {
       });
     }
 
-    const tradeAccount = TradeAccount.create({
+    const tradeAccount = Account.create({
       userId,
       market,
       currency,
@@ -72,9 +73,12 @@ export class CreateTradeAccountService {
       broker,
       initialBalance,
       currentBalance,
+      floatingBalance: currentBalance,
+      credits,
+      disabled,
     });
 
-    await this.tradeAccountRepository.save(tradeAccount);
+    await this.accountRepository.save(tradeAccount);
 
     return tradeAccount;
   }

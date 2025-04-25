@@ -1,2 +1,2 @@
-export * from './ITradeStrategyRepository'
-export * from './SqlTradeStrategyRepository'
+export * from './IStrategyRepository';
+export * from './SqlStrategyRepository';

@@ -3,8 +3,8 @@ export const ioc = {
     authRepository: Symbol.for('AuthRepository'),
     userRepository: Symbol.for('UserRepository'),
     subscriptionPlan: Symbol.for('SubscriptionPlan'),
-    tradeAccountRepository: Symbol.for('TradeAccountRepository'),
-    tradeJournalRepository: Symbol.for('TradeJournalRepository'),
-    tradeStrategyRepository: Symbol.for('TradeStrategyRepository'),
+    accountRepository: Symbol.for('AccountRepository'),
+    journalRepository: Symbol.for('JournalRepository'),
+    strategyRepository: Symbol.for('StrategyRepository'),
   },
 };

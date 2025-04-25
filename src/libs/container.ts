@@ -4,8 +4,8 @@ import { ioc } from '@/ioc';
 
 import { IAuthRepository, SqlAuthRepository } from '@/repositories/auth';
 import {
-  ITradeAccountRepository,
-  SqlTradeAccountRepository,
+  IAccountRepository,
+  SqlAccountRepository,
 } from '@/repositories/account';
 import { IUserRepository, SqlUserRepository } from '@/repositories/user';
 import {
@@ -13,12 +13,12 @@ import {
   SqlSubscriptionPlanRepository,
 } from '@/repositories/subscription-plans';
 import {
-  ITradeJournalRepository,
-  SqlTradeJournalRepository,
+  IJournalRepository,
+  SqlJournalRepository,
 } from '@/repositories/journal';
 import {
-  ITradeStrategyRepository,
-  SqlTradeStrategyRepository,
+  IStrategyRepository,
+  SqlStrategyRepository,
 } from '@/repositories/strategy';
 
 const container = new Container();
@@ -38,19 +38,19 @@ container
   .bind<ISubscriptionPlanRepository>(ioc.repositories.subscriptionPlan)
   .to(SqlSubscriptionPlanRepository);
 
-// Bindings - TRADE ACCOUNT REPOSITORY
+// Bindings - ACCOUNT REPOSITORY
 container
-  .bind<ITradeAccountRepository>(ioc.repositories.tradeAccountRepository)
-  .to(SqlTradeAccountRepository);
+  .bind<IAccountRepository>(ioc.repositories.accountRepository)
+  .to(SqlAccountRepository);
 
-// Bindings - TRADE JOURNAL REPOSITORY
+// Bindings - JOURNAL REPOSITORY
 container
-  .bind<ITradeJournalRepository>(ioc.repositories.tradeJournalRepository)
-  .to(SqlTradeJournalRepository);
+  .bind<IJournalRepository>(ioc.repositories.journalRepository)
+  .to(SqlJournalRepository);
 
-// Bindings - TRADE STRATEGY REPOSITORY
+// Bindings - STRATEGY REPOSITORY
 container
-  .bind<ITradeStrategyRepository>(ioc.repositories.tradeStrategyRepository)
-  .to(SqlTradeStrategyRepository);
+  .bind<IStrategyRepository>(ioc.repositories.strategyRepository)
+  .to(SqlStrategyRepository);
 
 export { container };

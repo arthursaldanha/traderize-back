@@ -1,4 +1,4 @@
-import { TradeStatus, TradeDirection } from '@prisma/client';
+import { Status, Direction } from '@prisma/client';
 import { z } from 'zod';
 
 const createJournalSchema = z.object({
@@ -16,8 +16,8 @@ const createJournalSchema = z.object({
   riskRewardRatio: z
     .number()
     .nonnegative('Risk-reward ratio must not be negative'),
-  status: z.nativeEnum(TradeStatus),
-  direction: z.nativeEnum(TradeDirection),
+  status: z.nativeEnum(Status),
+  direction: z.nativeEnum(Direction),
   tradeDate: z.coerce.date(),
   notes: z.string().optional(),
 });

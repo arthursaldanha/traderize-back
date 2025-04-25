@@ -11,7 +11,7 @@ import {
 import { CustomError } from '@/errors';
 import { StatusCodes } from 'http-status-codes';
 
-export class TradeJournalController {
+export class JournalController {
   static async create(req: Request, res: Response) {
     const { user } = req;
 

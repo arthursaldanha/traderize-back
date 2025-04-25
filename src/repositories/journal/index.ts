@@ -1,2 +1,2 @@
-export * from './ITradeJournalRepository'
-export * from './SqlTradeJournalRepository'
+export * from './IJournalRepository';
+export * from './SqlJournalRepository';

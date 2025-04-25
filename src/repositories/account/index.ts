@@ -1,2 +1,2 @@
-export * from './ITradeAccountRepository'
-export * from './SqlTradeAccountRepository'
+export * from './IAccountRepository'
+export * from './SqlAccountRepository'

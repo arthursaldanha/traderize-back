@@ -4,25 +4,23 @@ import { StatusCodes } from 'http-status-codes';
 import { ioc } from '@/ioc';
 
 import { CustomError } from '@/errors';
-import { TradeJournal, User } from '@/core/entities';
-import { ITradeAccountRepository } from '@/repositories/account';
+import { Journal, User } from '@/core/entities';
+import { IAccountRepository } from '@/repositories/account';
+import { IJournalRepository } from '@/repositories/journal';
 import { CreateJournalDTO } from '@/modules/journal/application/DTOs';
-import { ITradeJournalRepository } from '@/repositories/journal/ITradeJournalRepository';
 
 @injectable()
 export class CreateJournalService {
   constructor(
-    @inject(ioc.repositories.tradeAccountRepository)
-    private tradeAccountRepository: ITradeAccountRepository,
+    @inject(ioc.repositories.accountRepository)
+    private accountRepository: IAccountRepository,
 
-    @inject(ioc.repositories.tradeJournalRepository)
-    private tradeJournalRepository: ITradeJournalRepository,
+    @inject(ioc.repositories.journalRepository)
+    private journalRepository: IJournalRepository,
   ) {}
 
-  async execute(
-    data: CreateJournalDTO & { user: User },
-  ): Promise<TradeJournal> {
-    const isExistentAccount = await this.tradeAccountRepository.findById(
+  async execute(data: CreateJournalDTO & { user: User }): Promise<Journal> {
+    const isExistentAccount = await this.accountRepository.findById(
       data.accountId,
     );
 
@@ -33,7 +31,7 @@ export class CreateJournalService {
       });
     }
 
-    const tradeJournal = TradeJournal.create({
+    const tradeJournal = Journal.create({
       accountId: data.accountId,
       strategyId: data.strategyId || null,
       asset: data.asset,
@@ -51,7 +49,7 @@ export class CreateJournalService {
       notes: data.notes || null,
     });
 
-    await this.tradeJournalRepository.create(tradeJournal);
+    await this.journalRepository.create(tradeJournal);
 
     return tradeJournal;
   }

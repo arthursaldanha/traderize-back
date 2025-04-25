@@ -1,7 +1,7 @@
 import { Entity } from '@/core/entity';
 import { Uuid } from '@/core/value-objects';
 
-export class TradeJournalComment extends Entity {
+export class JournalComment extends Entity {
   constructor(
     readonly id: Uuid,
     readonly tradeId: Uuid,
@@ -23,7 +23,7 @@ export class TradeJournalComment extends Entity {
     createdAt?: Date;
     updatedAt?: Date;
   }) {
-    return new TradeJournalComment(
+    return new JournalComment(
       data.id ? new Uuid(data.id) : new Uuid(),
       new Uuid(data.tradeId),
       new Uuid(data.userId),
@@ -34,7 +34,7 @@ export class TradeJournalComment extends Entity {
     );
   }
 
-  static restore = TradeJournalComment.create;
+  static restore = JournalComment.create;
 
   toJSON() {
     return {

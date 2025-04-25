@@ -1,16 +1,12 @@
-import { PrismaClient, TradeStatus, TradeDirection } from '@prisma/client';
+import { PrismaClient, Status, Direction } from '@prisma/client';
 
-import {
-  TradeJournal,
-  TradeStrategy,
-  TradeJournalComment,
-} from '@/core/entities';
-import { ITradeJournalRepository } from '@/repositories/journal/ITradeJournalRepository';
+import { IJournalRepository } from '@/repositories/journal';
+import { Journal, Strategy, JournalComment } from '@/core/entities';
 
 const prisma = new PrismaClient();
 
-export class SqlTradeJournalRepository implements ITradeJournalRepository {
-  async create(tradeJournal: TradeJournal): Promise<void> {
+export class SqlJournalRepository implements IJournalRepository {
+  async create(tradeJournal: Journal): Promise<void> {
     await prisma.journal.create({
       data: {
         id: tradeJournal.id.getValue(),
@@ -25,8 +21,8 @@ export class SqlTradeJournalRepository implements ITradeJournalRepository {
         result: tradeJournal.result,
         riskRewardRatio: tradeJournal.riskRewardRatio,
         imageUrls: tradeJournal.imageUrls,
-        status: tradeJournal.status as TradeStatus,
-        direction: tradeJournal.direction as TradeDirection,
+        status: tradeJournal.status as Status,
+        direction: tradeJournal.direction as Direction,
         tradeDate: tradeJournal.tradeDate,
         notes: tradeJournal.notes,
         createdAt: tradeJournal.createdAt,
@@ -35,7 +31,7 @@ export class SqlTradeJournalRepository implements ITradeJournalRepository {
     });
   }
 
-  async findById(id: string): Promise<TradeJournal | null> {
+  async findById(id: string): Promise<Journal | null> {
     const tradeJournal = await prisma.journal.findUnique({
       where: { id },
       include: { strategy: true },
@@ -43,7 +39,7 @@ export class SqlTradeJournalRepository implements ITradeJournalRepository {
 
     if (!tradeJournal) return null;
 
-    const restoredTradeJournal = TradeJournal.restore({
+    const restoredJournal = Journal.restore({
       id: tradeJournal.id,
       accountId: tradeJournal.accountId,
       strategyId: tradeJournal.strategyId,
@@ -65,14 +61,14 @@ export class SqlTradeJournalRepository implements ITradeJournalRepository {
     });
 
     if (tradeJournal.strategy) {
-      const strategy = TradeStrategy.restore(tradeJournal.strategy);
-      restoredTradeJournal.setStrategy(strategy);
+      const strategy = Strategy.restore(tradeJournal.strategy);
+      restoredJournal.setStrategy(strategy);
     }
 
-    return restoredTradeJournal;
+    return restoredJournal;
   }
 
-  async findByIdWithComments(id: string): Promise<TradeJournal | null> {
+  async findByIdWithComments(id: string): Promise<Journal | null> {
     const tradeJournal = await prisma.journal.findUnique({
       where: { id },
       include: { strategy: true, tradeJournalComment: true },
@@ -80,7 +76,7 @@ export class SqlTradeJournalRepository implements ITradeJournalRepository {
 
     if (!tradeJournal) return null;
 
-    const restoredTradeJournal = TradeJournal.restore({
+    const restoredJournal = Journal.restore({
       id: tradeJournal.id,
       accountId: tradeJournal.accountId,
       strategyId: tradeJournal.strategyId,
@@ -102,28 +98,28 @@ export class SqlTradeJournalRepository implements ITradeJournalRepository {
     });
 
     if (tradeJournal.strategy) {
-      const strategy = TradeStrategy.restore(tradeJournal.strategy);
-      restoredTradeJournal.setStrategy(strategy);
+      const strategy = Strategy.restore(tradeJournal.strategy);
+      restoredJournal.setStrategy(strategy);
     }
 
     if (tradeJournal.tradeJournalComment.length > 0) {
       const comments = tradeJournal.tradeJournalComment.map(
-        TradeJournalComment.restore,
+        JournalComment.restore,
       );
-      restoredTradeJournal.setComments(comments);
+      restoredJournal.setComments(comments);
     }
 
-    return restoredTradeJournal;
+    return restoredJournal;
   }
 
-  async listByAccountId(accountId: string): Promise<TradeJournal[]> {
+  async listByAccountId(accountId: string): Promise<Journal[]> {
     const tradeJournals = await prisma.journal.findMany({
       where: { accountId },
       include: { strategy: true },
     });
 
     return tradeJournals.map((journal) => {
-      const restoredJournal = TradeJournal.restore({
+      const restoredJournal = Journal.restore({
         id: journal.id,
         accountId: journal.accountId,
         strategyId: journal.strategyId,
@@ -145,7 +141,7 @@ export class SqlTradeJournalRepository implements ITradeJournalRepository {
       });
 
       if (journal.strategy) {
-        const strategy = TradeStrategy.restore(journal.strategy);
+        const strategy = Strategy.restore(journal.strategy);
         restoredJournal.setStrategy(strategy);
       }
 
@@ -153,7 +149,7 @@ export class SqlTradeJournalRepository implements ITradeJournalRepository {
     });
   }
 
-  async update(tradeJournal: TradeJournal): Promise<void> {
+  async update(tradeJournal: Journal): Promise<void> {
     await prisma.journal.update({
       where: { id: tradeJournal.id.getValue() },
       data: {
@@ -168,8 +164,8 @@ export class SqlTradeJournalRepository implements ITradeJournalRepository {
         lots: Number(tradeJournal.lots),
         result: tradeJournal.result,
         riskRewardRatio: tradeJournal.riskRewardRatio,
-        status: tradeJournal.status as TradeStatus,
-        direction: tradeJournal.direction as TradeDirection,
+        status: tradeJournal.status as Status,
+        direction: tradeJournal.direction as Direction,
         tradeDate: tradeJournal.tradeDate,
         notes: tradeJournal.notes,
         createdAt: tradeJournal.createdAt,

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const createTradeStrategySchema = z.object({
+const createStrategySchema = z.object({
   name: z.string().min(2, 'O nome deve ter pelo menos 2 caracteres'),
   description: z.string().nullable().optional(),
   isDefault: z.boolean().optional(),
@@ -9,6 +9,6 @@ const createTradeStrategySchema = z.object({
   }),
 });
 
-type CreateTradeStrategyDTO = z.infer<typeof createTradeStrategySchema>;
+type CreateStrategyDTO = z.infer<typeof createStrategySchema>;
 
-export { createTradeStrategySchema, type CreateTradeStrategyDTO };
+export { createStrategySchema, type CreateStrategyDTO };

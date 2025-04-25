@@ -5,18 +5,18 @@ import { container } from '@/libs/container';
 
 import { CustomError } from '@/errors';
 import {
-  CreateTradeStrategyService,
-  FindTradeStrategyByIdService,
-  ListTradeStrategiesByUserIdService,
-  UpdateTradeStrategyService,
+  CreateStrategyService,
+  FindStrategyByIdService,
+  ListStrategiesByUserIdService,
+  UpdateStrategyService,
 } from '@/modules/strategy/application/services';
 
-export class TradeStrategyController {
+export class StrategyController {
   static async create(req: Request, res: Response) {
     const { user } = req;
 
     const strategy = await container
-      .resolve(CreateTradeStrategyService)
+      .resolve(CreateStrategyService)
       .execute({ user, ...req.body });
 
     res.status(201).json(strategy.toJSON());
@@ -33,7 +33,7 @@ export class TradeStrategyController {
     }
 
     const strategy = await container
-      .resolve(FindTradeStrategyByIdService)
+      .resolve(FindStrategyByIdService)
       .execute({ id });
 
     res.status(201).json(strategy.toJSON());
@@ -41,7 +41,7 @@ export class TradeStrategyController {
 
   static async listByUserId(req: Request, res: Response) {
     const strategies = await container
-      .resolve(ListTradeStrategiesByUserIdService)
+      .resolve(ListStrategiesByUserIdService)
       .execute({ userId: req.user.id.getValue() });
 
     res.status(201).json(strategies.map((strategy) => strategy.toJSON()));
@@ -59,7 +59,7 @@ export class TradeStrategyController {
     }
 
     const strategy = await container
-      .resolve(UpdateTradeStrategyService)
+      .resolve(UpdateStrategyService)
       .execute({ user, id, ...req.body });
 
     res.status(201).json(strategy.toJSON());

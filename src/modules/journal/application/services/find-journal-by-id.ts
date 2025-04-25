@@ -4,19 +4,19 @@ import { StatusCodes } from 'http-status-codes';
 import { ioc } from '@/ioc';
 
 import { CustomError } from '@/errors';
-import { TradeJournal } from '@/core/entities';
+import { Journal } from '@/core/entities';
+import { IJournalRepository } from '@/repositories/journal';
 import { FindJournalByIdDTO } from '@/modules/journal/application/DTOs';
-import { ITradeJournalRepository } from '@/repositories/journal/ITradeJournalRepository';
 
 @injectable()
 export class FindJournalByIdService {
   constructor(
     @inject(ioc.repositories.authRepository)
-    private tradeJournalRepository: ITradeJournalRepository,
+    private journalRepository: IJournalRepository,
   ) {}
 
-  async execute({ id }: FindJournalByIdDTO): Promise<TradeJournal> {
-    const journal = await this.tradeJournalRepository.findById(id);
+  async execute({ id }: FindJournalByIdDTO): Promise<Journal> {
+    const journal = await this.journalRepository.findById(id);
 
     if (!journal) {
       throw new CustomError({

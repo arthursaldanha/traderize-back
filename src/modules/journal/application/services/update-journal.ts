@@ -4,26 +4,26 @@ import { StatusCodes } from 'http-status-codes';
 import { ioc } from '@/ioc';
 
 import { CustomError } from '@/errors';
-import { User, TradeJournal } from '@/core/entities';
-import { ITradeAccountRepository } from '@/repositories/account';
+import { User, Journal } from '@/core/entities';
+import { IAccountRepository } from '@/repositories/account';
+import { IJournalRepository } from '@/repositories/journal';
 import { UpdateJournalDTO } from '@/modules/journal/application/DTOs';
-import { ITradeJournalRepository } from '@/repositories/journal/ITradeJournalRepository';
 
 @injectable()
 export class UpdateJournalService {
   constructor(
-    @inject(ioc.repositories.tradeAccountRepository)
-    private tradeAccountRepository: ITradeAccountRepository,
+    @inject(ioc.repositories.accountRepository)
+    private accountRepository: IAccountRepository,
 
     @inject(ioc.repositories.authRepository)
-    private tradeJournalRepository: ITradeJournalRepository,
+    private journalRepository: IJournalRepository,
   ) {}
 
   async execute(
     id: string,
     data: UpdateJournalDTO & { user: User },
-  ): Promise<TradeJournal> {
-    const isExistentAccount = await this.tradeAccountRepository.findById(
+  ): Promise<Journal> {
+    const isExistentAccount = await this.accountRepository.findById(
       data.accountId,
     );
 
@@ -34,7 +34,7 @@ export class UpdateJournalService {
       });
     }
 
-    const tradeJournal = await this.tradeJournalRepository.findById(id);
+    const tradeJournal = await this.journalRepository.findById(id);
 
     if (!tradeJournal) {
       throw new CustomError({
@@ -59,7 +59,7 @@ export class UpdateJournalService {
       notes: data.notes || null,
     });
 
-    await this.tradeJournalRepository.update(tradeJournal);
+    await this.journalRepository.update(tradeJournal);
 
     return tradeJournal;
   }

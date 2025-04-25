@@ -1,7 +1,7 @@
 import { Entity } from '@/core/entity';
 import { Uuid } from '@/core/value-objects';
 
-export class TradeAccount extends Entity {
+export class Account extends Entity {
   constructor(
     readonly id: Uuid,
     readonly userId: Uuid,
@@ -13,6 +13,8 @@ export class TradeAccount extends Entity {
     private initialBalance: number,
     private currentBalance: number,
     private floatingBalance: number,
+    private credits: number,
+    readonly disabled: boolean,
     readonly createdAt: Date,
     readonly updatedAt: Date,
   ) {
@@ -29,6 +31,9 @@ export class TradeAccount extends Entity {
     broker,
     initialBalance,
     currentBalance,
+    floatingBalance,
+    credits,
+    disabled,
     createdAt,
     updatedAt,
   }: {
@@ -41,10 +46,13 @@ export class TradeAccount extends Entity {
     broker: string;
     initialBalance: number;
     currentBalance: number;
+    floatingBalance: number;
+    credits: number;
+    disabled: boolean;
     createdAt?: Date;
     updatedAt?: Date;
-  }): TradeAccount {
-    return new TradeAccount(
+  }): Account {
+    return new Account(
       id ? new Uuid(id) : new Uuid(),
       new Uuid(userId),
       market,
@@ -54,7 +62,9 @@ export class TradeAccount extends Entity {
       broker,
       initialBalance,
       currentBalance,
-      currentBalance,
+      floatingBalance,
+      credits,
+      disabled,
       createdAt || new Date(),
       updatedAt || new Date(),
     );
@@ -71,10 +81,12 @@ export class TradeAccount extends Entity {
     initialBalance: number;
     currentBalance: number;
     floatingBalance: number;
+    credits: number;
+    disabled: boolean;
     createdAt: Date;
     updatedAt: Date;
-  }): TradeAccount {
-    return new TradeAccount(
+  }): Account {
+    return new Account(
       new Uuid(data.id),
       new Uuid(data.userId),
       data.market,
@@ -85,6 +97,8 @@ export class TradeAccount extends Entity {
       data.initialBalance,
       data.currentBalance,
       data.floatingBalance,
+      data.credits,
+      data.disabled,
       data.createdAt,
       data.updatedAt,
     );
@@ -101,8 +115,8 @@ export class TradeAccount extends Entity {
     this.floatingBalance -= amount;
   }
 
-  updateFloatingBalance(tradeImpact: number): void {
-    this.floatingBalance += tradeImpact;
+  updateFloatingBalance(Impact: number): void {
+    this.floatingBalance += Impact;
   }
 
   getInitialBalance(): number {
@@ -117,6 +131,10 @@ export class TradeAccount extends Entity {
     return this.floatingBalance;
   }
 
+  getCreditsBalance(): number {
+    return this.credits;
+  }
+
   toJSON() {
     return {
       id: this.id.getValue(),
@@ -129,6 +147,8 @@ export class TradeAccount extends Entity {
       initialBalance: this.initialBalance,
       currentBalance: this.currentBalance,
       floatingBalance: this.floatingBalance,
+      credits: this.credits,
+      disabled: this.disabled,
       createdAt: this.createdAt.toISOString(),
       updatedAt: this.updatedAt.toISOString(),
     };

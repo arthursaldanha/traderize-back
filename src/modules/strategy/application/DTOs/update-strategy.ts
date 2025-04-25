@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const updateTradeStrategySchema = z.object({
+const updateStrategySchema = z.object({
   id: z.string().uuid(),
   name: z.string().min(2, 'O nome deve ter pelo menos 2 caracteres'),
   description: z.string().nullable(),
@@ -8,6 +8,6 @@ const updateTradeStrategySchema = z.object({
   imageUrls: z.array(z.string().url()),
 });
 
-type UpdateTradeStrategyDTO = z.infer<typeof updateTradeStrategySchema>;
+type UpdateStrategyDTO = z.infer<typeof updateStrategySchema>;
 
-export { updateTradeStrategySchema, type UpdateTradeStrategyDTO };
+export { updateStrategySchema, type UpdateStrategyDTO };

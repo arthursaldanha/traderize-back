@@ -3,15 +3,15 @@ import { StatusCodes } from 'http-status-codes';
 
 import { ioc } from '@/ioc';
 import { CustomError } from '@/errors';
-import { TradeStrategy, User } from '@/core/entities';
-import { CreateTradeStrategyDTO } from '@/modules/strategy/application/DTOs';
-import { ITradeStrategyRepository } from '@/repositories/strategy/ITradeStrategyRepository';
+import { Strategy, User } from '@/core/entities';
+import { CreateStrategyDTO } from '@/modules/strategy/application/DTOs';
+import { IStrategyRepository } from '@/repositories/strategy';
 
 @injectable()
-export class CreateTradeStrategyService {
+export class CreateStrategyService {
   constructor(
-    @inject(ioc.repositories.tradeStrategyRepository)
-    private tradeStrategyRepository: ITradeStrategyRepository,
+    @inject(ioc.repositories.strategyRepository)
+    private strategyRepository: IStrategyRepository,
   ) {}
 
   async execute({
@@ -20,9 +20,9 @@ export class CreateTradeStrategyService {
     description,
     isDefault,
     imageUrls,
-  }: CreateTradeStrategyDTO & { user: User }): Promise<TradeStrategy> {
+  }: CreateStrategyDTO & { user: User }): Promise<Strategy> {
     const allExistentStrategies =
-      await this.tradeStrategyRepository.listByUserId(user.id.getValue());
+      await this.strategyRepository.listByUserId(user.id.getValue());
 
     const isDuplicate = allExistentStrategies.some(
       (plan) => plan.name.toLowerCase() === name.toLowerCase(),
@@ -35,7 +35,7 @@ export class CreateTradeStrategyService {
       });
     }
 
-    const strategy = TradeStrategy.create({
+    const strategy = Strategy.create({
       userId: user.id.getValue(),
       name,
       description,
@@ -43,7 +43,7 @@ export class CreateTradeStrategyService {
       imageUrls,
     });
 
-    await this.tradeStrategyRepository.create(strategy);
+    await this.strategyRepository.create(strategy);
 
     return strategy;
   }

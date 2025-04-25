@@ -3,15 +3,15 @@ import { StatusCodes } from 'http-status-codes';
 
 import { ioc } from '@/ioc';
 import { CustomError } from '@/errors';
-import { TradeStrategy, type User } from '@/core/entities';
-import { UpdateTradeStrategyDTO } from '@/modules/strategy/application/DTOs';
-import { ITradeStrategyRepository } from '@/repositories/strategy/ITradeStrategyRepository';
+import { Strategy, type User } from '@/core/entities';
+import { IStrategyRepository } from '@/repositories/strategy';
+import { UpdateStrategyDTO } from '@/modules/strategy/application/DTOs';
 
 @injectable()
-export class UpdateTradeStrategyService {
+export class UpdateStrategyService {
   constructor(
-    @inject(ioc.repositories.tradeStrategyRepository)
-    private tradeStrategyRepository: ITradeStrategyRepository,
+    @inject(ioc.repositories.strategyRepository)
+    private strategyRepository: IStrategyRepository,
   ) {}
 
   async execute({
@@ -21,9 +21,10 @@ export class UpdateTradeStrategyService {
     description,
     imageUrls,
     isDefault,
-  }: UpdateTradeStrategyDTO & { user: User }): Promise<TradeStrategy> {
-    const allExistentStrategies =
-      await this.tradeStrategyRepository.listByUserId(user.id.getValue());
+  }: UpdateStrategyDTO & { user: User }): Promise<Strategy> {
+    const allExistentStrategies = await this.strategyRepository.listByUserId(
+      user.id.getValue(),
+    );
 
     const strategy = allExistentStrategies.find(
       (plan) => plan.id.getValue() === id,
@@ -49,7 +50,7 @@ export class UpdateTradeStrategyService {
       });
     }
 
-    const updatedStrategy = TradeStrategy.create({
+    const updatedStrategy = Strategy.create({
       id: strategy.id.getValue(),
       userId: strategy.userId.getValue(),
       name: name ?? strategy.name,
@@ -60,7 +61,7 @@ export class UpdateTradeStrategyService {
       updatedAt: new Date(),
     });
 
-    await this.tradeStrategyRepository.update(updatedStrategy);
+    await this.strategyRepository.update(updatedStrategy);
 
     return updatedStrategy;
   }

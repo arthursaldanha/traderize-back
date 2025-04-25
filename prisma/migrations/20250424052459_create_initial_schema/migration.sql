@@ -2,7 +2,7 @@
 CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'MANAGER', 'USER', 'GUEST');
 
 -- CreateEnum
-CREATE TYPE "TradeAccountCurrency" AS ENUM ('AUD', 'BRL', 'CAD', 'CHF', 'CZK', 'EUR', 'GBP', 'USD');
+CREATE TYPE "AccountCurrency" AS ENUM ('AUD', 'BRL', 'CAD', 'CHF', 'CZK', 'EUR', 'GBP', 'USD');
 
 -- CreateEnum
 CREATE TYPE "Market" AS ENUM ('B3', 'CRYPTO', 'FOREX');
@@ -11,10 +11,10 @@ CREATE TYPE "Market" AS ENUM ('B3', 'CRYPTO', 'FOREX');
 CREATE TYPE "Platform" AS ENUM ('MT4', 'MT5', 'CTRADER', 'DX_TRADE', 'MATCH_TRADER', 'TRADE_LOCKER', 'PROFIT');
 
 -- CreateEnum
-CREATE TYPE "TradeDirection" AS ENUM ('LONG', 'SHORT');
+CREATE TYPE "Direction" AS ENUM ('LONG', 'SHORT');
 
 -- CreateEnum
-CREATE TYPE "TradeStatus" AS ENUM ('PENDING', 'OPEN', 'PARTIAL', 'CLOSED', 'CANCELED');
+CREATE TYPE "Status" AS ENUM ('PENDING', 'OPEN', 'PARTIAL', 'CLOSED', 'CANCELED');
 
 -- CreateEnum
 CREATE TYPE "LearningCategory" AS ENUM ('PSYCHOLOGY', 'TECHNICAL', 'RISK_MANAGEMENT');
@@ -68,7 +68,7 @@ CREATE TABLE "accounts" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "market" "Market"[],
-    "currency" "TradeAccountCurrency" NOT NULL DEFAULT 'USD',
+    "currency" "AccountCurrency" NOT NULL DEFAULT 'USD',
     "platform" "Platform" NOT NULL,
     "isPropFirm" BOOLEAN NOT NULL,
     "broker" TEXT NOT NULL,
@@ -111,8 +111,8 @@ CREATE TABLE "journals" (
     "result" DECIMAL(65,30),
     "riskRewardRatio" DECIMAL(65,30),
     "imageUrls" TEXT[],
-    "status" "TradeStatus" NOT NULL,
-    "direction" "TradeDirection" NOT NULL,
+    "status" "Status" NOT NULL,
+    "direction" "Direction" NOT NULL,
     "tradeDate" TIMESTAMP(3) NOT NULL,
     "notes" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
