@@ -1,5 +1,5 @@
-import { Market, Platform, AccountCurrency } from '@prisma/client';
 import { z } from 'zod';
+import { Market, Platform, AccountCurrency } from '@prisma/client';
 
 const createAccountSchema = z.object({
   market: z.array(z.nativeEnum(Market)),
@@ -13,7 +13,7 @@ const createAccountSchema = z.object({
   currentBalance: z
     .number()
     .positive('Current balance must be greater than zero'),
-  credits: z.number().positive('Credit must be greater than zero'),
+  credits: z.number().nonnegative('Credit must be greater than zero'),
   disabled: z.boolean(),
 });
 
