@@ -1,31 +1,31 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { StatusCodes } from 'http-status-codes';
-import { v7, validate as uuidValidate } from 'uuid';
+import { init, isCuid } from '@paralleldrive/cuid2';
 
 import { CustomError } from '@/errors';
 
-export class Uuid {
+export class Cuid {
   protected readonly value: any;
 
   constructor(id?: string) {
-    if ((id || id === null) && !Uuid.validate(id)) {
+    if ((id || id === null) && !Cuid.validate(id)) {
       throw new CustomError({
-        message: `UUID inválido: ${id}`,
+        message: `CUID inválido: ${id}`,
         statusCode: StatusCodes.BAD_REQUEST,
       });
     }
-    this.value = id || v7();
+    this.value = id || init({ length: 12 });
   }
 
   getValue(): string {
     return this.value;
   }
 
-  isEqual(other: Uuid): boolean {
+  isEqual(other: Cuid): boolean {
     return this.value === other.getValue();
   }
 
   static validate(id?: string) {
-    return uuidValidate(id ?? '');
+    return isCuid(id ?? '');
   }
 }

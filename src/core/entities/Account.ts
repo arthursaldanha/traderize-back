@@ -1,15 +1,17 @@
 import { Entity } from '@/core/entity';
-import { Uuid } from '@/core/value-objects';
+import { Uuid, Cuid } from '@/core/value-objects';
 
 export class Account extends Entity {
   constructor(
     readonly id: Uuid,
-    readonly userId: Uuid,
+    readonly userId: Cuid,
     readonly market: string[],
     readonly currency: string,
     readonly platform: string,
     readonly isPropFirm: boolean,
     readonly broker: string,
+    readonly externalId: string,
+    readonly description: string | null,
     private initialBalance: number,
     private currentBalance: number,
     private floatingBalance: number,
@@ -29,6 +31,8 @@ export class Account extends Entity {
     platform,
     isPropFirm,
     broker,
+    externalId,
+    description,
     initialBalance,
     currentBalance,
     floatingBalance,
@@ -44,6 +48,8 @@ export class Account extends Entity {
     platform: string;
     isPropFirm: boolean;
     broker: string;
+    externalId: string;
+    description: string | null;
     initialBalance: number;
     currentBalance: number;
     floatingBalance: number;
@@ -54,12 +60,14 @@ export class Account extends Entity {
   }): Account {
     return new Account(
       id ? new Uuid(id) : new Uuid(),
-      new Uuid(userId),
+      new Cuid(userId),
       market,
       currency,
       platform,
       isPropFirm,
       broker,
+      externalId,
+      description,
       initialBalance,
       currentBalance,
       floatingBalance,
@@ -78,6 +86,8 @@ export class Account extends Entity {
     platform: string;
     isPropFirm: boolean;
     broker: string;
+    externalId: string;
+    description: string | null;
     initialBalance: number;
     currentBalance: number;
     floatingBalance: number;
@@ -88,12 +98,14 @@ export class Account extends Entity {
   }): Account {
     return new Account(
       new Uuid(data.id),
-      new Uuid(data.userId),
+      new Cuid(data.userId),
       data.market,
       data.currency,
       data.platform,
       data.isPropFirm,
       data.broker,
+      data.externalId,
+      data.description,
       data.initialBalance,
       data.currentBalance,
       data.floatingBalance,
@@ -144,6 +156,8 @@ export class Account extends Entity {
       platform: this.platform,
       isPropFirm: this.isPropFirm,
       broker: this.broker,
+      externalId: this.externalId,
+      description: this.description,
       initialBalance: this.initialBalance,
       currentBalance: this.currentBalance,
       floatingBalance: this.floatingBalance,

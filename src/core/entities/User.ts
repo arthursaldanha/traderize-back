@@ -4,14 +4,14 @@ import { StatusCodes } from 'http-status-codes';
 import { Entity } from '@/core/entity';
 import { CustomError } from '@/errors';
 import { SubscriptionPlan } from '@/core/entities';
-import { Email, Name, Password, Uuid } from '@/core/value-objects';
+import { Email, Name, Password, Uuid, Cuid } from '@/core/value-objects';
 
 export class User extends Entity {
   private subscriptionPlan: SubscriptionPlan | null = null;
   private role: UserRole;
 
   constructor(
-    readonly id: Uuid,
+    readonly id: Cuid,
     private planId: Uuid | null,
     readonly firstName: Name,
     readonly lastName: Name,
@@ -54,7 +54,7 @@ export class User extends Entity {
     }
 
     return new User(
-      new Uuid(data.id),
+      new Cuid(data.id),
       data.planId ? new Uuid(data.planId) : null,
       new Name(data.firstName),
       new Name(data.lastName),

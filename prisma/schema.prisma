@@ -42,8 +42,8 @@ enum Platform {
 }
 
 enum Direction {
-  LONG
-  SHORT
+  BUY
+  SELL
 }
 
 enum Status {
@@ -61,7 +61,7 @@ enum LearningCategory {
 }
 
 model User {
-  id              String   @id @default(uuid())
+  id              String   @id @default(cuid())
   planId          String?
   firstName       String
   lastName        String
@@ -74,13 +74,9 @@ model User {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  class               Class[]
-  otpCode             OtpCode[]
-  accounts            Account[]
-  classManager        ClassManager[]
-  classStudent        ClassStudent[]
-  Strategy            Strategy[]
-  tradeJournalComment JournalComment[]
+  otpCode  OtpCode[]
+  accounts Account[]
+  Strategy Strategy[]
 
   plan SubscriptionPlan? @relation(fields: [planId], references: [id], onDelete: SetNull)
 
@@ -116,8 +112,10 @@ model SubscriptionPlan {
 }
 
 model Account {
-  id              String               @id @default(uuid())
+  id              String          @id @default(uuid())
   userId          String
+  externalId      String
+  description     String?
   market          Market[]
   currency        AccountCurrency @default(USD)
   platform        Platform
@@ -126,10 +124,10 @@ model Account {
   initialBalance  Decimal
   currentBalance  Decimal
   floatingBalance Decimal
-  credits         Decimal              @default(0)
-  disabled        Boolean              @default(false)
-  createdAt       DateTime             @default(now())
-  updatedAt       DateTime             @updatedAt
+  credits         Decimal         @default(0)
+  disabled        Boolean         @default(false)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
 
   journals  Journal[]
   learnings LearningList[]
@@ -158,47 +156,77 @@ model Strategy {
 }
 
 model Journal {
-  id              String         @id @default(uuid())
+  id              String    @id @default(uuid())
   accountId       String
   strategyId      String?
-  asset           String
+  externalTradeId String
+  symbol          String
   entryPrice      Decimal
   stopPrice       Decimal
   takePrices      Decimal[]
   investment      Decimal
   lots            Decimal
   result          Decimal?
+  commission      Decimal?
+  swap            Decimal?
+  fee             Decimal?
+  total           Decimal?
   riskRewardRatio Decimal?
   imageUrls       String[]
   status          Status
   direction       Direction
-  tradeDate       DateTime
+  timeDateStart   DateTime
+  timeDateEnd     DateTime?
+  tradeDuration   Decimal?
   notes           String?
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
-  tradeJournalComment JournalComment[]
+  account            Account            @relation(fields: [accountId], references: [id])
+  strategy           Strategy?          @relation(fields: [strategyId], references: [id])
+  detailsMetaTrader5 JournalDetailMT5[] @relation("JournalToDetailMT5")
 
-  account  Account   @relation(fields: [accountId], references: [id])
-  strategy Strategy? @relation(fields: [strategyId], references: [id])
-
+  @@unique([accountId, externalTradeId])
+  @@index([accountId])
+  @@index([accountId, strategyId])
+  @@index([accountId, externalTradeId])
+  @@index([accountId, symbol])
+  @@index([accountId, symbol, direction])
+  @@index([accountId, timeDateStart, timeDateEnd])
   @@map("journals")
 }
 
-model JournalComment {
-  id        String   @id @default(uuid())
-  tradeId   String
-  userId    String
-  classId   String
-  comment   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model JournalDetailMT5 {
+  id              String   @id @default(uuid())
+  accountId       String
+  externalTradeId String
+  ticket          Int
+  symbol          String
+  comment         String?
+  lots            Decimal
+  entryPrice      Decimal
+  stopPrice       Decimal
+  takePrice       Decimal
+  investment      Decimal
+  riskRewardRatio Decimal
+  result          Decimal
+  commission      Decimal
+  swap            Decimal
+  fee             Decimal
+  time            DateTime
+  type            String
+  entry           String
+  reason          String
+  orderId         Int
+  positionId      Int
+  magic           Int
 
-  user  User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  class Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
-  trade Journal @relation(fields: [tradeId], references: [id], onDelete: Cascade)
+  journal Journal @relation("JournalToDetailMT5", fields: [accountId, externalTradeId], references: [accountId, externalTradeId])
 
-  @@map("journal_comments")
+  @@index([accountId])
+  @@index([externalTradeId])
+  @@index([accountId, externalTradeId])
+  @@map("journal_detail_mt5")
 }
 
 model LearningList {
@@ -214,44 +242,4 @@ model LearningList {
   account Account @relation(fields: [accountId], references: [id])
 
   @@map("learning_lists")
-}
-
-model Class {
-  id        String   @id @default(uuid())
-  name      String
-  adminId   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  managers            ClassManager[]
-  students            ClassStudent[]
-  tradeJournalComment JournalComment[]
-
-  admin User @relation(fields: [adminId], references: [id], onDelete: Cascade)
-
-  @@map("classes")
-}
-
-model ClassManager {
-  id      String @id @default(uuid())
-  classId String
-  userId  String
-
-  class Class @relation(fields: [classId], references: [id], onDelete: Cascade)
-  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([classId, userId])
-  @@map("class_managers")
-}
-
-model ClassStudent {
-  id      String @id @default(uuid())
-  classId String
-  userId  String
-
-  class Class @relation(fields: [classId], references: [id], onDelete: Cascade)
-  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([classId, userId])
-  @@map("class_students")
 }

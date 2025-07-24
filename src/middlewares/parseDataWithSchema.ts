@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { z, ZodError } from 'zod';
+import { ZodError, ZodTypeAny } from 'zod';
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response, NextFunction } from 'express';
 
-export function parseDataWithSchema(schema: z.ZodObject<any, any>) {
+export function parseDataWithSchema(schema: ZodTypeAny) {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
       schema.parse(req.body);

@@ -7,7 +7,7 @@ import { ioc } from '@/ioc';
 
 import { User } from '@/core/entities';
 import { CustomError } from '@/errors';
-import { Uuid } from '@/core/value-objects';
+import { Cuid } from '@/core/value-objects';
 import { RegisterDTO } from '@/modules/auth/application/DTOs';
 import { IAuthRepository } from '@/repositories/auth/IAuthRepository';
 
@@ -40,7 +40,7 @@ export class RegisterService {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = User.create({
-      id: new Uuid().getValue(),
+      id: new Cuid().getValue(),
       planId,
       firstName,
       lastName,

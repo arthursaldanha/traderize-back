@@ -1,7 +1,7 @@
 import { PrismaClient, Status, Direction } from '@prisma/client';
 
 import { IJournalRepository } from '@/repositories/journal';
-import { Journal, Strategy, JournalComment } from '@/core/entities';
+import { Journal, Strategy } from '@/core/entities';
 
 const prisma = new PrismaClient();
 
@@ -12,7 +12,8 @@ export class SqlJournalRepository implements IJournalRepository {
         id: tradeJournal.id.getValue(),
         accountId: tradeJournal.accountId.getValue(),
         strategyId: tradeJournal.getStrategyId()?.getValue(),
-        asset: tradeJournal.asset,
+        externalTradeId: tradeJournal.externalTradeId,
+        symbol: tradeJournal.symbol,
         entryPrice: tradeJournal.entryPrice,
         stopPrice: tradeJournal.stopPrice,
         takePrices: tradeJournal.takePrices,
@@ -43,7 +44,8 @@ export class SqlJournalRepository implements IJournalRepository {
       id: tradeJournal.id,
       accountId: tradeJournal.accountId,
       strategyId: tradeJournal.strategyId,
-      asset: tradeJournal.asset,
+      externalTradeId: tradeJournal.externalTradeId,
+      symbol: tradeJournal.symbol,
       entryPrice: Number(tradeJournal.entryPrice),
       stopPrice: Number(tradeJournal.stopPrice),
       takePrices: tradeJournal.takePrices.map((price) => Number(price)),
@@ -68,10 +70,12 @@ export class SqlJournalRepository implements IJournalRepository {
     return restoredJournal;
   }
 
-  async findByIdWithComments(id: string): Promise<Journal | null> {
+  async findByExternalTradeId(
+    externalTradeId: string,
+  ): Promise<Journal | null> {
     const tradeJournal = await prisma.journal.findUnique({
-      where: { id },
-      include: { strategy: true, tradeJournalComment: true },
+      where: { externalTradeId },
+      include: { strategy: true },
     });
 
     if (!tradeJournal) return null;
@@ -80,7 +84,8 @@ export class SqlJournalRepository implements IJournalRepository {
       id: tradeJournal.id,
       accountId: tradeJournal.accountId,
       strategyId: tradeJournal.strategyId,
-      asset: tradeJournal.asset,
+      externalTradeId: tradeJournal.externalTradeId,
+      symbol: tradeJournal.symbol,
       entryPrice: Number(tradeJournal.entryPrice),
       stopPrice: Number(tradeJournal.stopPrice),
       takePrices: tradeJournal.takePrices.map((price) => Number(price)),
@@ -100,13 +105,6 @@ export class SqlJournalRepository implements IJournalRepository {
     if (tradeJournal.strategy) {
       const strategy = Strategy.restore(tradeJournal.strategy);
       restoredJournal.setStrategy(strategy);
-    }
-
-    if (tradeJournal.tradeJournalComment.length > 0) {
-      const comments = tradeJournal.tradeJournalComment.map(
-        JournalComment.restore,
-      );
-      restoredJournal.setComments(comments);
     }
 
     return restoredJournal;
@@ -123,7 +121,8 @@ export class SqlJournalRepository implements IJournalRepository {
         id: journal.id,
         accountId: journal.accountId,
         strategyId: journal.strategyId,
-        asset: journal.asset,
+        externalTradeId: journal.externalTradeId,
+        symbol: journal.symbol,
         entryPrice: Number(journal.entryPrice),
         stopPrice: Number(journal.stopPrice),
         takePrices: journal.takePrices.map((price) => Number(price)),
@@ -156,7 +155,8 @@ export class SqlJournalRepository implements IJournalRepository {
         id: tradeJournal.id.getValue(),
         accountId: tradeJournal.accountId.getValue(),
         strategyId: tradeJournal.getStrategyId()?.getValue(),
-        asset: tradeJournal.asset,
+        externalTradeId: tradeJournal.externalTradeId,
+        symbol: tradeJournal.symbol,
         entryPrice: tradeJournal.entryPrice,
         stopPrice: tradeJournal.stopPrice,
         takePrices: tradeJournal.takePrices,

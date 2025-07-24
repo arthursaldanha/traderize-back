@@ -7,6 +7,10 @@ const createAccountSchema = z.object({
   platform: z.nativeEnum(Platform),
   isPropFirm: z.boolean(),
   broker: z.string().min(2, 'Broker name must be at least 2 characters long'),
+  externalId: z
+    .string()
+    .min(2, 'External ID must be at least 2 characters long'),
+  description: z.string().nullable(),
   initialBalance: z
     .number()
     .positive('Initial balance must be greater than zero'),
