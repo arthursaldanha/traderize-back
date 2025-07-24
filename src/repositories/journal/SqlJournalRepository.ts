@@ -1,7 +1,7 @@
 import { PrismaClient, Status, Direction } from '@prisma/client';
 
 import { IJournalRepository } from '@/repositories/journal';
-import { Journal, Strategy } from '@/core/entities';
+import { Journal, Strategy, JournalDetailMT5 } from '@/core/entities';
 
 const prisma = new PrismaClient();
 
@@ -20,11 +20,17 @@ export class SqlJournalRepository implements IJournalRepository {
         investment: tradeJournal.investment,
         lots: tradeJournal.lots,
         result: tradeJournal.result,
+        commission: tradeJournal.commission,
+        swap: tradeJournal.swap,
+        fee: tradeJournal.fee,
+        total: tradeJournal.total,
         riskRewardRatio: tradeJournal.riskRewardRatio,
         imageUrls: tradeJournal.imageUrls,
         status: tradeJournal.status as Status,
         direction: tradeJournal.direction as Direction,
-        tradeDate: tradeJournal.tradeDate,
+        timeDateStart: tradeJournal.timeDateStart,
+        timeDateEnd: tradeJournal.timeDateEnd,
+        tradeDuration: tradeJournal.tradeDuration,
         notes: tradeJournal.notes,
         createdAt: tradeJournal.createdAt,
         updatedAt: tradeJournal.updatedAt,
@@ -32,119 +38,165 @@ export class SqlJournalRepository implements IJournalRepository {
     });
   }
 
-  async findById(id: string): Promise<Journal | null> {
+  async findById(id: string, withDetails = false): Promise<Journal | null> {
     const tradeJournal = await prisma.journal.findUnique({
       where: { id },
-      include: { strategy: true },
+      include: {
+        strategy: true,
+        detailsMetaTrader5: withDetails,
+      },
     });
 
     if (!tradeJournal) return null;
 
-    const restoredJournal = Journal.restore({
+    const journal = Journal.restore({
       id: tradeJournal.id,
       accountId: tradeJournal.accountId,
       strategyId: tradeJournal.strategyId,
       externalTradeId: tradeJournal.externalTradeId,
       symbol: tradeJournal.symbol,
-      entryPrice: Number(tradeJournal.entryPrice),
-      stopPrice: Number(tradeJournal.stopPrice),
-      takePrices: tradeJournal.takePrices.map((price) => Number(price)),
-      investment: Number(tradeJournal.investment),
-      lots: Number(tradeJournal.lots),
-      result: Number(tradeJournal.result),
-      riskRewardRatio: Number(tradeJournal.riskRewardRatio),
-      status: tradeJournal.status,
+      entryPrice: tradeJournal.entryPrice,
+      stopPrice: tradeJournal.stopPrice,
+      takePrices: tradeJournal.takePrices,
+      investment: tradeJournal.investment,
+      lots: tradeJournal.lots,
+      result: tradeJournal.result,
+      commission: tradeJournal.commission,
+      swap: tradeJournal.swap,
+      fee: tradeJournal.fee,
+      total: tradeJournal.total,
+      riskRewardRatio: tradeJournal.riskRewardRatio,
       imageUrls: tradeJournal.imageUrls,
+      status: tradeJournal.status,
       direction: tradeJournal.direction,
-      tradeDate: tradeJournal.tradeDate,
+      timeDateStart: tradeJournal.timeDateStart,
+      timeDateEnd: tradeJournal.timeDateEnd,
+      tradeDuration: tradeJournal.tradeDuration,
       notes: tradeJournal.notes,
       createdAt: tradeJournal.createdAt,
       updatedAt: tradeJournal.updatedAt,
+      detailsMetaTrader5:
+        withDetails && tradeJournal.detailsMetaTrader5
+          ? tradeJournal.detailsMetaTrader5.map(JournalDetailMT5.restore)
+          : undefined,
     });
 
     if (tradeJournal.strategy) {
-      const strategy = Strategy.restore(tradeJournal.strategy);
-      restoredJournal.setStrategy(strategy);
+      journal.setStrategy(Strategy.restore(tradeJournal.strategy));
     }
 
-    return restoredJournal;
+    return journal;
   }
 
   async findByExternalTradeId(
     externalTradeId: string,
+    accountId: string,
+    withDetails = false,
   ): Promise<Journal | null> {
     const tradeJournal = await prisma.journal.findUnique({
-      where: { externalTradeId },
-      include: { strategy: true },
+      where: {
+        accountId_externalTradeId: {
+          accountId,
+          externalTradeId,
+        },
+      },
+      include: {
+        strategy: true,
+        detailsMetaTrader5: withDetails,
+      },
     });
 
     if (!tradeJournal) return null;
 
-    const restoredJournal = Journal.restore({
+    const journal = Journal.restore({
       id: tradeJournal.id,
       accountId: tradeJournal.accountId,
       strategyId: tradeJournal.strategyId,
       externalTradeId: tradeJournal.externalTradeId,
       symbol: tradeJournal.symbol,
-      entryPrice: Number(tradeJournal.entryPrice),
-      stopPrice: Number(tradeJournal.stopPrice),
-      takePrices: tradeJournal.takePrices.map((price) => Number(price)),
-      investment: Number(tradeJournal.investment),
-      lots: Number(tradeJournal.lots),
-      result: Number(tradeJournal.result),
-      riskRewardRatio: Number(tradeJournal.riskRewardRatio),
-      status: tradeJournal.status,
+      entryPrice: tradeJournal.entryPrice,
+      stopPrice: tradeJournal.stopPrice,
+      takePrices: tradeJournal.takePrices,
+      investment: tradeJournal.investment,
+      lots: tradeJournal.lots,
+      result: tradeJournal.result,
+      commission: tradeJournal.commission,
+      swap: tradeJournal.swap,
+      fee: tradeJournal.fee,
+      total: tradeJournal.total,
+      riskRewardRatio: tradeJournal.riskRewardRatio,
       imageUrls: tradeJournal.imageUrls,
+      status: tradeJournal.status,
       direction: tradeJournal.direction,
-      tradeDate: tradeJournal.tradeDate,
+      timeDateStart: tradeJournal.timeDateStart,
+      timeDateEnd: tradeJournal.timeDateEnd,
+      tradeDuration: tradeJournal.tradeDuration,
       notes: tradeJournal.notes,
       createdAt: tradeJournal.createdAt,
       updatedAt: tradeJournal.updatedAt,
     });
 
     if (tradeJournal.strategy) {
-      const strategy = Strategy.restore(tradeJournal.strategy);
-      restoredJournal.setStrategy(strategy);
+      journal.setStrategy(Strategy.restore(tradeJournal.strategy));
+    }
+    if (withDetails) {
+      journal.setJournalDetailMt5(
+        tradeJournal.detailsMetaTrader5.map(JournalDetailMT5.restore),
+      );
     }
 
-    return restoredJournal;
+    return journal;
   }
 
-  async listByAccountId(accountId: string): Promise<Journal[]> {
+  async listByAccountId(
+    accountId: string,
+    withDetails = false,
+  ): Promise<Journal[]> {
     const tradeJournals = await prisma.journal.findMany({
       where: { accountId },
-      include: { strategy: true },
+      include: {
+        strategy: true,
+        detailsMetaTrader5: withDetails,
+      },
     });
 
     return tradeJournals.map((journal) => {
-      const restoredJournal = Journal.restore({
+      const entity = Journal.restore({
         id: journal.id,
         accountId: journal.accountId,
         strategyId: journal.strategyId,
         externalTradeId: journal.externalTradeId,
         symbol: journal.symbol,
-        entryPrice: Number(journal.entryPrice),
-        stopPrice: Number(journal.stopPrice),
-        takePrices: journal.takePrices.map((price) => Number(price)),
-        investment: Number(journal.investment),
-        lots: Number(journal.lots),
-        result: Number(journal.result),
-        riskRewardRatio: Number(journal.riskRewardRatio),
-        status: journal.status,
+        entryPrice: journal.entryPrice,
+        stopPrice: journal.stopPrice,
+        takePrices: journal.takePrices,
+        investment: journal.investment,
+        lots: journal.lots,
+        result: journal.result,
+        commission: journal.commission,
+        swap: journal.swap,
+        fee: journal.fee,
+        total: journal.total,
+        riskRewardRatio: journal.riskRewardRatio,
         imageUrls: journal.imageUrls,
+        status: journal.status,
         direction: journal.direction,
-        tradeDate: journal.tradeDate,
+        timeDateStart: journal.timeDateStart,
+        timeDateEnd: journal.timeDateEnd,
+        tradeDuration: journal.tradeDuration,
         notes: journal.notes,
         createdAt: journal.createdAt,
         updatedAt: journal.updatedAt,
+        detailsMetaTrader5:
+          withDetails && journal.detailsMetaTrader5
+            ? journal.detailsMetaTrader5.map(JournalDetailMT5.restore)
+            : undefined,
       });
 
       if (journal.strategy) {
-        const strategy = Strategy.restore(journal.strategy);
-        restoredJournal.setStrategy(strategy);
+        entity.setStrategy(Strategy.restore(journal.strategy));
       }
-
-      return restoredJournal;
+      return entity;
     });
   }
 
@@ -160,13 +212,20 @@ export class SqlJournalRepository implements IJournalRepository {
         entryPrice: tradeJournal.entryPrice,
         stopPrice: tradeJournal.stopPrice,
         takePrices: tradeJournal.takePrices,
-        investment: Number(tradeJournal.investment),
-        lots: Number(tradeJournal.lots),
+        investment: tradeJournal.investment,
+        lots: tradeJournal.lots,
         result: tradeJournal.result,
+        commission: tradeJournal.commission,
+        swap: tradeJournal.swap,
+        fee: tradeJournal.fee,
+        total: tradeJournal.total,
         riskRewardRatio: tradeJournal.riskRewardRatio,
+        imageUrls: tradeJournal.imageUrls,
         status: tradeJournal.status as Status,
         direction: tradeJournal.direction as Direction,
-        tradeDate: tradeJournal.tradeDate,
+        timeDateStart: tradeJournal.timeDateStart,
+        timeDateEnd: tradeJournal.timeDateEnd,
+        tradeDuration: tradeJournal.tradeDuration,
         notes: tradeJournal.notes,
         createdAt: tradeJournal.createdAt,
         updatedAt: tradeJournal.updatedAt,

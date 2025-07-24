@@ -8,23 +8,23 @@ export class Journal extends Entity {
   private strategyId: Uuid | null;
   externalTradeId: string;
   symbol: string;
-  entryPrice: number;
-  stopPrice: number;
-  takePrices: number[];
-  investment: number;
-  lots: number;
-  result: number | null;
-  commission: number | null;
-  swap: number | null;
-  fee: number | null;
-  total: number | null;
-  riskRewardRatio: number | null;
+  entryPrice: string;
+  stopPrice: string;
+  takePrices: string[];
+  investment: string;
+  lots: string;
+  result: string | null;
+  commission: string | null;
+  swap: string | null;
+  fee: string | null;
+  total: string | null;
+  riskRewardRatio: string | null;
   imageUrls: string[];
   status: string;
   direction: string;
   timeDateStart: Date;
   timeDateEnd: Date | null;
-  tradeDuration: number | null;
+  tradeDuration: string | null;
   notes: string | null;
   createdAt: Date;
   updatedAt: Date;
@@ -38,23 +38,23 @@ export class Journal extends Entity {
     strategyId: Uuid | null,
     externalTradeId: string,
     symbol: string,
-    entryPrice: number,
-    stopPrice: number,
-    takePrices: number[],
-    investment: number,
-    lots: number,
-    result: number | null,
-    commission: number | null,
-    swap: number | null,
-    fee: number | null,
-    total: number | null,
-    riskRewardRatio: number | null,
+    entryPrice: string,
+    stopPrice: string,
+    takePrices: string[],
+    investment: string,
+    lots: string,
+    result: string | null,
+    commission: string | null,
+    swap: string | null,
+    fee: string | null,
+    total: string | null,
+    riskRewardRatio: string | null,
     imageUrls: string[],
     status: string,
     direction: string,
     timeDateStart: Date,
     timeDateEnd: Date | null,
-    tradeDuration: number | null,
+    tradeDuration: string | null,
     notes: string | null,
     createdAt: Date,
     updatedAt: Date,
@@ -95,23 +95,23 @@ export class Journal extends Entity {
     strategyId?: string | null;
     externalTradeId: string;
     symbol: string;
-    entryPrice: number;
-    stopPrice: number;
-    takePrices: number[];
-    investment: number;
-    lots: number;
-    result?: number | null;
-    commission?: number | null;
-    swap?: number | null;
-    fee?: number | null;
-    total?: number | null;
-    riskRewardRatio?: number | null;
+    entryPrice: string;
+    stopPrice: string;
+    takePrices: string[];
+    investment: string;
+    lots: string;
+    result?: string | null;
+    commission?: string | null;
+    swap?: string | null;
+    fee?: string | null;
+    total?: string | null;
+    riskRewardRatio?: string | null;
     imageUrls: string[];
     status: string;
     direction: string;
     timeDateStart: Date;
     timeDateEnd?: Date | null;
-    tradeDuration?: number | null;
+    tradeDuration?: string | null;
     notes?: string | null;
     createdAt?: Date;
     updatedAt?: Date;
@@ -143,16 +143,11 @@ export class Journal extends Entity {
       data.notes ?? null,
       data.createdAt || new Date(),
       data.updatedAt || new Date(),
-      data.detailsMetaTrader5,
+      data.detailsMetaTrader5 ?? [],
     );
   }
 
   static restore = Journal.create;
-
-  setStrategy(strategy: Strategy | null) {
-    this.strategy = strategy;
-    this.strategyId = strategy?.id || null;
-  }
 
   getStrategyId(): Uuid | null {
     return this.strategyId;
@@ -162,26 +157,35 @@ export class Journal extends Entity {
     return this.strategy;
   }
 
+  setStrategy(strategy: Strategy | null) {
+    this.strategy = strategy;
+    this.strategyId = strategy?.id || null;
+  }
+
+  setJournalDetailMt5(details: JournalDetailMT5[]) {
+    this.detailsMetaTrader5 = details;
+  }
+
   updateDetails(data: {
     strategyId?: string | null;
     externalTradeId: string;
-    entryPrice: number;
-    stopPrice: number;
-    takePrices: number[];
-    investment: number;
-    lots: number;
-    result?: number | null;
-    commission?: number | null;
-    swap?: number | null;
-    fee?: number | null;
-    total?: number | null;
-    riskRewardRatio?: number | null;
+    entryPrice: string;
+    stopPrice: string;
+    takePrices: string[];
+    investment: string;
+    lots: string;
+    result?: string | null;
+    commission?: string | null;
+    swap?: string | null;
+    fee?: string | null;
+    total?: string | null;
+    riskRewardRatio?: string | null;
     imageUrls: string[];
     status: string;
     direction: string;
     timeDateStart: Date;
     timeDateEnd?: Date | null;
-    tradeDuration?: number | null;
+    tradeDuration?: string | null;
     notes?: string | null;
     detailsMetaTrader5?: JournalDetailMT5[];
   }): void {

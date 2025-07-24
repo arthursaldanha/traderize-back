@@ -161,23 +161,23 @@ model Journal {
   strategyId      String?
   externalTradeId String
   symbol          String
-  entryPrice      Decimal
-  stopPrice       Decimal
-  takePrices      Decimal[]
-  investment      Decimal
-  lots            Decimal
-  result          Decimal?
-  commission      Decimal?
-  swap            Decimal?
-  fee             Decimal?
-  total           Decimal?
-  riskRewardRatio Decimal?
+  entryPrice      String
+  stopPrice       String
+  takePrices      String[]
+  investment      String
+  lots            String
+  result          String?
+  commission      String?
+  swap            String?
+  fee             String?
+  total           String?
+  riskRewardRatio String?
   imageUrls       String[]
   status          Status
   direction       Direction
   timeDateStart   DateTime
   timeDateEnd     DateTime?
-  tradeDuration   Decimal?
+  tradeDuration   String?
   notes           String?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
@@ -203,16 +203,16 @@ model JournalDetailMT5 {
   ticket          Int
   symbol          String
   comment         String?
-  lots            Decimal
-  entryPrice      Decimal
-  stopPrice       Decimal
-  takePrice       Decimal
-  investment      Decimal
-  riskRewardRatio Decimal
-  result          Decimal
-  commission      Decimal
-  swap            Decimal
-  fee             Decimal
+  lots            String
+  entryPrice      String
+  stopPrice       String
+  takePrice       String
+  investment      String
+  riskRewardRatio String
+  result          String
+  commission      String
+  swap            String
+  fee             String
   time            DateTime
   type            String
   entry           String

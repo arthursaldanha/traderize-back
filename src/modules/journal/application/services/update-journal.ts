@@ -45,17 +45,18 @@ export class UpdateJournalService {
 
     tradeJournal.updateDetails({
       strategyId: data.strategyId || null,
-      entryPrice: data.entryPrice,
-      stopPrice: data.stopPrice,
-      takePrices: data.takePrices,
-      investment: data.investment,
-      lots: data.lots,
-      result: data.result || null,
-      riskRewardRatio: data.riskRewardRatio || null,
+      externalTradeId: '', // TODO AJUSTAR ISSO AQUI
+      entryPrice: String(data.entryPrice),
+      stopPrice: String(data.stopPrice),
+      takePrices: data.takePrices.map(String),
+      investment: String(data.investment),
+      lots: String(data.lots),
+      result: String(data.result) || null,
+      riskRewardRatio: String(data.riskRewardRatio) || null,
       status: data.status,
       imageUrls: [],
       direction: data.direction,
-      tradeDate: data.tradeDate,
+      timeDateStart: data.tradeDate,
       notes: data.notes || null,
     });
 

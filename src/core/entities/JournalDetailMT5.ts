@@ -8,16 +8,16 @@ export class JournalDetailMT5 extends Entity {
   ticket: number;
   symbol: string;
   comment?: string | null;
-  lots: number;
-  entryPrice: number;
-  stopPrice: number;
-  takePrice: number;
-  investment: number;
-  riskRewardRatio: number;
-  result: number;
-  commission: number;
-  swap: number;
-  fee: number;
+  lots: string;
+  entryPrice: string;
+  stopPrice: string;
+  takePrice: string;
+  investment: string;
+  riskRewardRatio: string;
+  result: string;
+  commission: string;
+  swap: string;
+  fee: string;
   time: Date;
   type: string;
   entry: string;
@@ -33,16 +33,16 @@ export class JournalDetailMT5 extends Entity {
     ticket: number,
     symbol: string,
     comment: string | null,
-    lots: number,
-    entryPrice: number,
-    stopPrice: number,
-    takePrice: number,
-    investment: number,
-    riskRewardRatio: number,
-    result: number,
-    commission: number,
-    swap: number,
-    fee: number,
+    lots: string,
+    entryPrice: string,
+    stopPrice: string,
+    takePrice: string,
+    investment: string,
+    riskRewardRatio: string,
+    result: string,
+    commission: string,
+    swap: string,
+    fee: string,
     time: Date,
     type: string,
     entry: string,
@@ -84,16 +84,16 @@ export class JournalDetailMT5 extends Entity {
     ticket: number;
     symbol: string;
     comment?: string | null;
-    lots: number;
-    entryPrice: number;
-    stopPrice: number;
-    takePrice: number;
-    investment: number;
-    riskRewardRatio: number;
-    result: number;
-    commission: number;
-    swap: number;
-    fee: number;
+    lots: string;
+    entryPrice: string;
+    stopPrice: string;
+    takePrice: string;
+    investment: string;
+    riskRewardRatio: string;
+    result: string;
+    commission: string;
+    swap: string;
+    fee: string;
     time: Date | string;
     type: string;
     entry: string;
