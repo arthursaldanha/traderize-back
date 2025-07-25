@@ -134,6 +134,8 @@ model Account {
 
   user User @relation(fields: [userId], references: [id])
 
+  @@unique([userId, externalId])
+  @@index([userId, externalId])
   @@map("accounts")
 }
 
@@ -161,23 +163,23 @@ model Journal {
   strategyId      String?
   externalTradeId String
   symbol          String
-  entryPrice      String
-  stopPrice       String
-  takePrices      String[]
-  investment      String
-  lots            String
-  result          String?
-  commission      String?
-  swap            String?
-  fee             String?
-  total           String?
-  riskRewardRatio String?
+  entryPrice      Decimal
+  stopPrice       Decimal
+  takePrices      Decimal[]
+  investment      Decimal
+  lots            Decimal
+  result          Decimal?
+  commission      Decimal?
+  swap            Decimal?
+  fee             Decimal?
+  total           Decimal?
+  riskRewardRatio Decimal?
   imageUrls       String[]
   status          Status
   direction       Direction
   timeDateStart   DateTime
   timeDateEnd     DateTime?
-  tradeDuration   String?
+  tradeDuration   Int?
   notes           String?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
@@ -203,16 +205,16 @@ model JournalDetailMT5 {
   ticket          Int
   symbol          String
   comment         String?
-  lots            String
-  entryPrice      String
-  stopPrice       String
-  takePrice       String
-  investment      String
-  riskRewardRatio String
-  result          String
-  commission      String
-  swap            String
-  fee             String
+  lots            Decimal
+  entryPrice      Decimal
+  stopPrice       Decimal
+  takePrice       Decimal
+  investment      Decimal
+  riskRewardRatio Decimal
+  result          Decimal
+  commission      Decimal
+  swap            Decimal
+  fee             Decimal
   time            DateTime
   type            String
   entry           String
@@ -226,6 +228,7 @@ model JournalDetailMT5 {
   @@index([accountId])
   @@index([externalTradeId])
   @@index([accountId, externalTradeId])
+  @@index([accountId, externalTradeId, ticket])
   @@map("journal_detail_mt5")
 }
 

@@ -2,7 +2,7 @@ import { Status, Direction } from '@prisma/client';
 import { z } from 'zod';
 
 const createJournalSchema = z.object({
-  accountId: z.string().uuid(),
+  accountId: z.string(),
   strategyId: z.string().uuid().nullable(),
   asset: z.string().min(1, 'Asset name must not be empty'),
   entryPrice: z.number().positive('Entry price must be greater than zero'),

@@ -75,14 +75,15 @@ export class SqlJournalRepository implements IJournalRepository {
       notes: tradeJournal.notes,
       createdAt: tradeJournal.createdAt,
       updatedAt: tradeJournal.updatedAt,
-      detailsMetaTrader5:
-        withDetails && tradeJournal.detailsMetaTrader5
-          ? tradeJournal.detailsMetaTrader5.map(JournalDetailMT5.restore)
-          : undefined,
     });
 
     if (tradeJournal.strategy) {
       journal.setStrategy(Strategy.restore(tradeJournal.strategy));
+    }
+    if (withDetails) {
+      journal.setJournalDetailMt5(
+        tradeJournal.detailsMetaTrader5.map(JournalDetailMT5.restore),
+      );
     }
 
     return journal;
@@ -187,15 +188,17 @@ export class SqlJournalRepository implements IJournalRepository {
         notes: journal.notes,
         createdAt: journal.createdAt,
         updatedAt: journal.updatedAt,
-        detailsMetaTrader5:
-          withDetails && journal.detailsMetaTrader5
-            ? journal.detailsMetaTrader5.map(JournalDetailMT5.restore)
-            : undefined,
       });
 
       if (journal.strategy) {
         entity.setStrategy(Strategy.restore(journal.strategy));
       }
+      if (withDetails) {
+        entity.setJournalDetailMt5(
+          journal.detailsMetaTrader5.map(JournalDetailMT5.restore),
+        );
+      }
+
       return entity;
     });
   }

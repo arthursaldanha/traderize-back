@@ -1,5 +1,11 @@
+import { Decimal } from '@prisma/client/runtime/library';
+
 import { Entity } from '@/core/entity';
 import { Uuid } from '@/core/value-objects';
+
+function toDecimal(val: string | number | Decimal): Decimal {
+  return val instanceof Decimal ? val : new Decimal(val);
+}
 
 export class JournalDetailMT5 extends Entity {
   readonly id: Uuid;
@@ -8,16 +14,16 @@ export class JournalDetailMT5 extends Entity {
   ticket: number;
   symbol: string;
   comment?: string | null;
-  lots: string;
-  entryPrice: string;
-  stopPrice: string;
-  takePrice: string;
-  investment: string;
-  riskRewardRatio: string;
-  result: string;
-  commission: string;
-  swap: string;
-  fee: string;
+  lots: Decimal;
+  entryPrice: Decimal;
+  stopPrice: Decimal;
+  takePrice: Decimal;
+  investment: Decimal;
+  riskRewardRatio: Decimal;
+  result: Decimal;
+  commission: Decimal;
+  swap: Decimal;
+  fee: Decimal;
   time: Date;
   type: string;
   entry: string;
@@ -33,16 +39,16 @@ export class JournalDetailMT5 extends Entity {
     ticket: number,
     symbol: string,
     comment: string | null,
-    lots: string,
-    entryPrice: string,
-    stopPrice: string,
-    takePrice: string,
-    investment: string,
-    riskRewardRatio: string,
-    result: string,
-    commission: string,
-    swap: string,
-    fee: string,
+    lots: string | number | Decimal,
+    entryPrice: string | number | Decimal,
+    stopPrice: string | number | Decimal,
+    takePrice: string | number | Decimal,
+    investment: string | number | Decimal,
+    riskRewardRatio: string | number | Decimal,
+    result: string | number | Decimal,
+    commission: string | number | Decimal,
+    swap: string | number | Decimal,
+    fee: string | number | Decimal,
     time: Date,
     type: string,
     entry: string,
@@ -58,16 +64,16 @@ export class JournalDetailMT5 extends Entity {
     this.ticket = ticket;
     this.symbol = symbol;
     this.comment = comment;
-    this.lots = lots;
-    this.entryPrice = entryPrice;
-    this.stopPrice = stopPrice;
-    this.takePrice = takePrice;
-    this.investment = investment;
-    this.riskRewardRatio = riskRewardRatio;
-    this.result = result;
-    this.commission = commission;
-    this.swap = swap;
-    this.fee = fee;
+    this.lots = toDecimal(lots);
+    this.entryPrice = toDecimal(entryPrice);
+    this.stopPrice = toDecimal(stopPrice);
+    this.takePrice = toDecimal(takePrice);
+    this.investment = toDecimal(investment);
+    this.riskRewardRatio = toDecimal(riskRewardRatio);
+    this.result = toDecimal(result);
+    this.commission = toDecimal(commission);
+    this.swap = toDecimal(swap);
+    this.fee = toDecimal(fee);
     this.time = time;
     this.type = type;
     this.entry = entry;
@@ -84,16 +90,16 @@ export class JournalDetailMT5 extends Entity {
     ticket: number;
     symbol: string;
     comment?: string | null;
-    lots: string;
-    entryPrice: string;
-    stopPrice: string;
-    takePrice: string;
-    investment: string;
-    riskRewardRatio: string;
-    result: string;
-    commission: string;
-    swap: string;
-    fee: string;
+    lots: string | number | Decimal;
+    entryPrice: string | number | Decimal;
+    stopPrice: string | number | Decimal;
+    takePrice: string | number | Decimal;
+    investment: string | number | Decimal;
+    riskRewardRatio: string | number | Decimal;
+    result: string | number | Decimal;
+    commission: string | number | Decimal;
+    swap: string | number | Decimal;
+    fee: string | number | Decimal;
     time: Date | string;
     type: string;
     entry: string;
@@ -139,16 +145,16 @@ export class JournalDetailMT5 extends Entity {
       ticket: this.ticket,
       symbol: this.symbol,
       comment: this.comment,
-      lots: this.lots,
-      entryPrice: this.entryPrice,
-      stopPrice: this.stopPrice,
-      takePrice: this.takePrice,
-      investment: this.investment,
-      riskRewardRatio: this.riskRewardRatio,
-      result: this.result,
-      commission: this.commission,
-      swap: this.swap,
-      fee: this.fee,
+      lots: this.lots.toString(),
+      entryPrice: this.entryPrice.toString(),
+      stopPrice: this.stopPrice.toString(),
+      takePrice: this.takePrice.toString(),
+      investment: this.investment.toString(),
+      riskRewardRatio: this.riskRewardRatio.toString(),
+      result: this.result.toString(),
+      commission: this.commission.toString(),
+      swap: this.swap.toString(),
+      fee: this.fee.toString(),
       time: this.time.toISOString(),
       type: this.type,
       entry: this.entry,

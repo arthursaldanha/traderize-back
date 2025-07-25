@@ -6,7 +6,8 @@ import { Request, Response, NextFunction } from 'express';
 export function parseDataWithSchema(schema: ZodTypeAny) {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
-      schema.parse(req.body);
+      const data = schema.parse(req.body);
+      req.body = data;
       next();
     } catch (error) {
       if (error instanceof ZodError) {

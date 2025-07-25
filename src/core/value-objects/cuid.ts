@@ -14,7 +14,7 @@ export class Cuid {
         statusCode: StatusCodes.BAD_REQUEST,
       });
     }
-    this.value = id || init({ length: 12 });
+    this.value = id || init({ length: 16 });
   }
 
   getValue(): string {

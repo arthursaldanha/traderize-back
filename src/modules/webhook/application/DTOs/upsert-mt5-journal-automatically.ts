@@ -1,46 +1,12 @@
 import { z } from 'zod';
 
-const type = z.enum([
-  'BUY',
-  'SELL',
-  'BALANCE',
-  'CREDIT',
-  'ADDITIONAL_CHARGE',
-  'CORRECTION',
-  'BONUS',
-  'COMMISSION',
-  'COMMISSION_DAILY',
-  'COMMISSION_MONTHLY',
-  'AGENT_DAILY',
-  'AGENT_MONTHLY',
-  'INTEREST',
-  'BUY_CANCELED',
-  'SELL_CANCELED',
-  'DIVIDEND',
-  'DIVIDEND_FRANKED',
-  'TAX',
-  'UNKNOWN',
-]);
-
-const entry = z.enum(['IN', 'OUT', 'INOUT', 'OUT_BY', 'UNKNOWN']);
-
-const reason = z.enum([
-  'CLIENT',
-  'EXPERT',
-  'WEB',
-  'MOBILE',
-  'STOP_LOSS',
-  'TAKE_PROFIT',
-  'STOP_OUT',
-  'ROLLOVER',
-  'VMARGIN',
-  'SPLIT',
-  'CORPORATE_ACTION',
-  'UNKNOWN',
-]);
+import {
+  MT5DealTypeToDomain,
+  MT5DealEntryToDomain,
+  MT5DealReasonToDomain,
+} from '@/modules/webhook/domain/enums';
 
 export const dealSchema = z.object({
-  accountId: z.number(),
   ticket: z.number(),
   symbol: z.string(),
   comment: z.string(),
@@ -55,9 +21,11 @@ export const dealSchema = z.object({
   swap: z.number(),
   fee: z.number(),
   time: z.string(),
-  type,
-  entry,
-  reason,
+  type: z.string().transform((val) => MT5DealTypeToDomain[val] || 'UNKNOWN'),
+  entry: z.string().transform((val) => MT5DealEntryToDomain[val] || 'UNKNOWN'),
+  reason: z
+    .string()
+    .transform((val) => MT5DealReasonToDomain[val] || 'UNKNOWN'),
   orderId: z.number(),
   positionId: z.number(),
   magic: z.number(),

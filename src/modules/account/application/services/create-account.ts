@@ -66,6 +66,17 @@ export class CreateAccountService {
       });
     }
 
+    const isAccountAlreadyExists = existingAccounts.find(
+      (account) => account.externalId === externalId,
+    );
+
+    if (isAccountAlreadyExists) {
+      throw new CustomError({
+        message: `A conta ${isAccountAlreadyExists.externalId} já existe em nossa base de dados`,
+        statusCode: StatusCodes.CONFLICT,
+      });
+    }
+
     const tradeAccount = Account.create({
       userId,
       market,

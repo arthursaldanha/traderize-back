@@ -17,6 +17,10 @@ import {
   SqlJournalRepository,
 } from '@/repositories/journal';
 import {
+  IJournalDetailMT5Repository,
+  SqlJournalDetailMT5Repository,
+} from '@/repositories/journal-detail-mt5';
+import {
   IStrategyRepository,
   SqlStrategyRepository,
 } from '@/repositories/strategy';
@@ -47,6 +51,13 @@ container
 container
   .bind<IJournalRepository>(ioc.repositories.journalRepository)
   .to(SqlJournalRepository);
+
+// Bindings - JOURNAL DETAIL MT5 REPOSITORY
+container
+  .bind<IJournalDetailMT5Repository>(
+    ioc.repositories.journalDetailMt5Repository,
+  )
+  .to(SqlJournalDetailMT5Repository);
 
 // Bindings - STRATEGY REPOSITORY
 container

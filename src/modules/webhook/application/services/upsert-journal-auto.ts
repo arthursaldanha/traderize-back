@@ -1,19 +1,47 @@
 import dayjs from 'dayjs';
 import { inject, injectable } from 'inversify';
+import { StatusCodes } from 'http-status-codes';
 
 import { ioc } from '@/ioc';
+import { CustomError } from '@/errors';
 import { IJournalRepository } from '@/repositories/journal';
+import { IAccountRepository } from '@/repositories/account';
+import { IJournalDetailMT5Repository } from '@/repositories/journal-detail-mt5';
 import { UpsertupsertJournalAutoDTO } from '@/modules/webhook/application/DTOs';
 
 @injectable()
 export class UpsertJournalByExternalTradeIdService {
   constructor(
+    @inject(ioc.repositories.accountRepository)
+    private accountRepository: IAccountRepository,
+
     @inject(ioc.repositories.journalRepository)
     private journalRepository: IJournalRepository,
+
+    @inject(ioc.repositories.journalRepository)
+    private journalDetailMt5Repository: IJournalDetailMT5Repository,
   ) {}
 
-  async execute(data: UpsertupsertJournalAutoDTO) {
-    // const accountId = String(data[0]?.accountId);
+  async execute({
+    userId,
+    accountId,
+    data,
+  }: {
+    userId: string;
+    accountId: string;
+    data: UpsertupsertJournalAutoDTO;
+  }) {
+    const account = await this.accountRepository.findByUserIdAndExternalId({
+      userId,
+      externalId: accountId,
+    });
+
+    if (!account) {
+      throw new CustomError({
+        message: `Esta conta com o ID ${accountId} não foi encontrada.`,
+        statusCode: StatusCodes.NOT_FOUND,
+      });
+    }
 
     const filtered = data.filter(
       (deal) => deal.symbol && deal.symbol.trim() !== '',
@@ -64,6 +92,7 @@ export class UpsertJournalByExternalTradeIdService {
         : 0;
 
       journals.push({
+        accountId: account.id.getValue(),
         externalTradeId: positionId.toString(),
         symbol,
         direction,
