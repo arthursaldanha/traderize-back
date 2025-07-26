@@ -202,7 +202,7 @@ model JournalDetailMT5 {
   id              String   @id @default(uuid())
   accountId       String
   externalTradeId String
-  ticket          Int
+  ticket          String
   symbol          String
   comment         String?
   lots            Decimal
@@ -219,9 +219,9 @@ model JournalDetailMT5 {
   type            String
   entry           String
   reason          String
-  orderId         Int
-  positionId      Int
-  magic           Int
+  orderId         String
+  positionId      String
+  magic           String
 
   journal Journal @relation("JournalToDetailMT5", fields: [accountId, externalTradeId], references: [accountId, externalTradeId])
 

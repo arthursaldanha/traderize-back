@@ -104,7 +104,7 @@ export class SqlJournalDetailMT5Repository
   async findManyByAccountExternalTradeIdAndTickets(params: {
     accountId: string;
     positionId: string;
-    tickets: number[];
+    tickets: string[];
   }): Promise<JournalDetailMT5[]> {
     const result = await prisma.journalDetailMT5.findMany({
       where: {

@@ -16,10 +16,6 @@ function nullableDecimal(
   if (val === null || val === undefined) return null;
   return toDecimal(val);
 }
-function decimalToString(val?: Decimal | null): string | null {
-  if (!val) return null;
-  return val.toString();
-}
 function decimalArrayToString(vals: Decimal[]): string[] {
   return vals.map((d) => d.toString());
 }
@@ -52,7 +48,7 @@ export class Journal extends Entity {
   updatedAt: Date;
 
   strategy: Strategy | null = null;
-  detailsMetaTrader5?: JournalDetailMT5[];
+  detailsMetaTrader5: JournalDetailMT5[];
 
   constructor(
     id: Uuid,
@@ -108,7 +104,7 @@ export class Journal extends Entity {
     this.notes = notes;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
-    this.detailsMetaTrader5 = detailsMetaTrader5;
+    this.detailsMetaTrader5 = detailsMetaTrader5 ?? [];
   }
 
   static create(data: {
@@ -184,6 +180,10 @@ export class Journal extends Entity {
     this.strategyId = strategy?.id || null;
   }
 
+  getJournalDetailMt5(): JournalDetailMT5[] {
+    return this.detailsMetaTrader5;
+  }
+
   setJournalDetailMt5(details: JournalDetailMT5[]) {
     this.detailsMetaTrader5 = details;
   }
@@ -231,7 +231,7 @@ export class Journal extends Entity {
     this.timeDateEnd = data.timeDateEnd ?? null;
     this.tradeDuration = data.tradeDuration ?? null;
     this.notes = data.notes ?? null;
-    this.detailsMetaTrader5 = data.detailsMetaTrader5 ?? undefined;
+    this.detailsMetaTrader5 = data.detailsMetaTrader5 ?? [];
     this.updatedAt = new Date();
   }
 
@@ -247,12 +247,12 @@ export class Journal extends Entity {
       takePrices: decimalArrayToString(this.takePrices),
       investment: this.investment.toString(),
       lots: this.lots.toString(),
-      result: decimalToString(this.result),
-      commission: decimalToString(this.commission),
-      swap: decimalToString(this.swap),
-      fee: decimalToString(this.fee),
-      total: decimalToString(this.total),
-      riskRewardRatio: decimalToString(this.riskRewardRatio),
+      result: this.result?.toNumber(),
+      commission: this.commission?.toNumber(),
+      swap: this.swap?.toNumber(),
+      fee: this.fee?.toNumber(),
+      total: this.total?.toNumber(),
+      riskRewardRatio: this.riskRewardRatio?.toNumber(),
       imageUrls: this.imageUrls,
       status: this.status,
       direction: this.direction,

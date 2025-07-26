@@ -7,7 +7,7 @@ import {
 } from '@/modules/webhook/domain/enums';
 
 export const dealSchema = z.object({
-  ticket: z.number(),
+  ticket: z.number().transform(String),
   symbol: z.string(),
   comment: z.string(),
   lots: z.number(),
@@ -26,9 +26,9 @@ export const dealSchema = z.object({
   reason: z
     .string()
     .transform((val) => MT5DealReasonToDomain[val] || 'UNKNOWN'),
-  orderId: z.number(),
-  positionId: z.number(),
-  magic: z.number(),
+  orderId: z.number().transform(String),
+  positionId: z.number().transform(String),
+  magic: z.number().transform(String),
 });
 
 const upsertJournalAutoSchema = z.array(dealSchema);

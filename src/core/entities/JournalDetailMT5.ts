@@ -11,7 +11,7 @@ export class JournalDetailMT5 extends Entity {
   readonly id: Uuid;
   accountId: Uuid;
   externalTradeId: string;
-  ticket: number;
+  ticket: string;
   symbol: string;
   comment?: string | null;
   lots: Decimal;
@@ -28,15 +28,15 @@ export class JournalDetailMT5 extends Entity {
   type: string;
   entry: string;
   reason: string;
-  orderId: number;
-  positionId: number;
-  magic: number;
+  orderId: string;
+  positionId: string;
+  magic: string;
 
   constructor(
     id: Uuid,
     accountId: Uuid,
     externalTradeId: string,
-    ticket: number,
+    ticket: string,
     symbol: string,
     comment: string | null,
     lots: string | number | Decimal,
@@ -53,9 +53,9 @@ export class JournalDetailMT5 extends Entity {
     type: string,
     entry: string,
     reason: string,
-    orderId: number,
-    positionId: number,
-    magic: number,
+    orderId: string,
+    positionId: string,
+    magic: string,
   ) {
     super();
     this.id = id;
@@ -87,7 +87,7 @@ export class JournalDetailMT5 extends Entity {
     id?: string;
     accountId: string;
     externalTradeId: string;
-    ticket: number;
+    ticket: string;
     symbol: string;
     comment?: string | null;
     lots: string | number | Decimal;
@@ -104,9 +104,9 @@ export class JournalDetailMT5 extends Entity {
     type: string;
     entry: string;
     reason: string;
-    orderId: number;
-    positionId: number;
-    magic: number;
+    orderId: string;
+    positionId: string;
+    magic: string;
   }) {
     return new JournalDetailMT5(
       data.id ? new Uuid(data.id) : new Uuid(),
@@ -145,16 +145,16 @@ export class JournalDetailMT5 extends Entity {
       ticket: this.ticket,
       symbol: this.symbol,
       comment: this.comment,
-      lots: this.lots.toString(),
-      entryPrice: this.entryPrice.toString(),
-      stopPrice: this.stopPrice.toString(),
-      takePrice: this.takePrice.toString(),
-      investment: this.investment.toString(),
-      riskRewardRatio: this.riskRewardRatio.toString(),
-      result: this.result.toString(),
-      commission: this.commission.toString(),
-      swap: this.swap.toString(),
-      fee: this.fee.toString(),
+      lots: this.lots.toNumber(),
+      entryPrice: this.entryPrice.toNumber(),
+      stopPrice: this.stopPrice.toNumber(),
+      takePrice: this.takePrice.toNumber(),
+      investment: this.investment.toNumber(),
+      riskRewardRatio: this.riskRewardRatio.toNumber(),
+      result: this.result.toNumber(),
+      commission: this.commission.toNumber(),
+      swap: this.swap.toNumber(),
+      fee: this.fee.toNumber(),
       time: this.time.toISOString(),
       type: this.type,
       entry: this.entry,

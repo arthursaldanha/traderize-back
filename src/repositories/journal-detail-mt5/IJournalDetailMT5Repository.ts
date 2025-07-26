@@ -7,7 +7,7 @@ export interface IJournalDetailMT5Repository {
   findManyByAccountExternalTradeIdAndTickets(params: {
     accountId: string;
     positionId: string;
-    tickets: number[];
+    tickets: string[];
   }): Promise<JournalDetailMT5[]>;
   listByExternalTradeId(
     accountId: string,
