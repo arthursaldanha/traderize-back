@@ -1,4 +1,7 @@
 export const ioc = {
+  useCases: {
+    analyzeDashboardDataUseCase: Symbol.for('AnalyzeDashboardDataUseCase'),
+  },
   repositories: {
     authRepository: Symbol.for('AuthRepository'),
     userRepository: Symbol.for('UserRepository'),

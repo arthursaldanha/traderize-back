@@ -16,6 +16,24 @@ export class SqlAuthRepository implements IAuthRepository {
     return User.restore(user);
   }
 
+  async findUserByUsernameAndEmail({
+    email,
+    username,
+  }: {
+    username: string;
+    email: string;
+  }): Promise<User | null> {
+    const user = await prisma.user.findFirst({
+      where: {
+        OR: [{ username: { equals: username } }, { email: { equals: email } }],
+      },
+    });
+
+    if (!user) return null;
+
+    return User.restore(user);
+  }
+
   async saveUser(user: User): Promise<void> {
     await prisma.user.create({
       data: {

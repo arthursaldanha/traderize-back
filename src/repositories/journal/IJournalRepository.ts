@@ -14,7 +14,10 @@ export interface IJournalRepository {
     accountId: string;
     externalTradeIds: string[];
   }): Promise<Journal[] | null>;
-  listByAccountId(accountId: string, withDetails?: boolean): Promise<Journal[]>;
+  listByAccountIds(params: {
+    accountIds: string[];
+    details: { withStrategy?: boolean; withMt5Transactions?: boolean };
+  }): Promise<Journal[]>;
   update(journal: Journal): Promise<void>;
   updateMany(journals: Journal[]): Promise<void>;
 }

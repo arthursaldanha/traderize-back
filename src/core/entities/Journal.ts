@@ -24,6 +24,7 @@ export class Journal extends Entity {
   readonly id: Uuid;
   readonly accountId: Uuid;
   private strategyId: Uuid | null;
+  creationMethod: string;
   externalTradeId: string;
   symbol: string;
   entryPrice: Decimal;
@@ -54,6 +55,7 @@ export class Journal extends Entity {
     id: Uuid,
     accountId: Uuid,
     strategyId: Uuid | null,
+    creationMethod: string,
     externalTradeId: string,
     symbol: string,
     entryPrice: string | number | Decimal,
@@ -82,6 +84,7 @@ export class Journal extends Entity {
     this.id = id;
     this.accountId = accountId;
     this.strategyId = strategyId;
+    this.creationMethod = creationMethod;
     this.externalTradeId = externalTradeId;
     this.symbol = symbol;
     this.entryPrice = toDecimal(entryPrice);
@@ -111,6 +114,7 @@ export class Journal extends Entity {
     id?: string;
     accountId: string;
     strategyId?: string | null;
+    creationMethod: string;
     externalTradeId: string;
     symbol: string;
     entryPrice: string | number | Decimal;
@@ -139,6 +143,7 @@ export class Journal extends Entity {
       data.id ? new Uuid(data.id) : new Uuid(),
       new Uuid(data.accountId),
       data.strategyId ? new Uuid(data.strategyId) : null,
+      data.creationMethod,
       data.externalTradeId,
       data.symbol,
       data.entryPrice,
@@ -240,6 +245,7 @@ export class Journal extends Entity {
       id: this.id.getValue(),
       accountId: this.accountId.getValue(),
       strategyId: this.strategyId?.getValue() || null,
+      creationMethod: this.creationMethod,
       externalTradeId: this.externalTradeId,
       symbol: this.symbol,
       entryPrice: this.entryPrice.toString(),

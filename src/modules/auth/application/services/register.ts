@@ -28,11 +28,14 @@ export class RegisterService {
     password,
     planId,
   }: RegisterDTO): Promise<User> {
-    const existingUser = await this.authRepository.findUserByEmail(email);
+    const existingUser = await this.authRepository.findUserByUsernameAndEmail({
+      username,
+      email,
+    });
 
     if (existingUser) {
       throw new CustomError({
-        message: 'Usuário já existe.',
+        message: 'Usuário ou email já existe em nossa base de dados.',
         statusCode: StatusCodes.BAD_REQUEST,
       });
     }

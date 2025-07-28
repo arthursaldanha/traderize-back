@@ -158,6 +158,7 @@ export class UpsertJournalByExternalTradeIdService {
       if (!existentJournal) {
         const journalToCreate = Journal.create({
           accountId: account.id.getValue(),
+          creationMethod: 'AUTOMATION',
           externalTradeId: positionId.toString(),
           symbol,
           direction,
@@ -187,6 +188,7 @@ export class UpsertJournalByExternalTradeIdService {
         const journalToUpdate = Journal.restore({
           id: existentJournal.id.getValue(),
           accountId: existentJournal.accountId.getValue(),
+          creationMethod: 'AUTOMATION',
           externalTradeId: existentJournal.externalTradeId,
           strategyId,
           symbol,

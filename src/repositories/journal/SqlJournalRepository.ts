@@ -1,4 +1,9 @@
-import { PrismaClient, Status, Direction } from '@prisma/client';
+import {
+  PrismaClient,
+  Status,
+  Direction,
+  type CreationMethod,
+} from '@prisma/client';
 
 import { IJournalRepository } from '@/repositories/journal';
 import { Journal, Strategy, JournalDetailMT5 } from '@/core/entities';
@@ -12,6 +17,7 @@ export class SqlJournalRepository implements IJournalRepository {
         id: journal.id.getValue(),
         accountId: journal.accountId.getValue(),
         strategyId: journal.getStrategyId()?.getValue(),
+        creationMethod: journal.creationMethod as CreationMethod,
         externalTradeId: journal.externalTradeId,
         symbol: journal.symbol,
         entryPrice: journal.entryPrice,
@@ -47,6 +53,7 @@ export class SqlJournalRepository implements IJournalRepository {
       id: j.id.getValue(),
       accountId: j.accountId.getValue(),
       strategyId: j.getStrategyId?.() ? j.getStrategyId()?.getValue() : null,
+      creationMethod: j.creationMethod as CreationMethod,
       externalTradeId: j.externalTradeId,
       symbol: j.symbol,
       entryPrice: j.entryPrice,
@@ -92,6 +99,7 @@ export class SqlJournalRepository implements IJournalRepository {
       id: tradeJournal.id,
       accountId: tradeJournal.accountId,
       strategyId: tradeJournal.strategyId,
+      creationMethod: tradeJournal.creationMethod,
       externalTradeId: tradeJournal.externalTradeId,
       symbol: tradeJournal.symbol,
       entryPrice: tradeJournal.entryPrice,
@@ -158,6 +166,7 @@ export class SqlJournalRepository implements IJournalRepository {
       id: tradeJournal.id,
       accountId: tradeJournal.accountId,
       strategyId: tradeJournal.strategyId,
+      creationMethod: tradeJournal.creationMethod,
       externalTradeId: tradeJournal.externalTradeId,
       symbol: tradeJournal.symbol,
       entryPrice: tradeJournal.entryPrice,
@@ -218,6 +227,7 @@ export class SqlJournalRepository implements IJournalRepository {
         id: j.id,
         accountId: j.accountId,
         strategyId: j.strategyId,
+        creationMethod: j.creationMethod,
         externalTradeId: j.externalTradeId,
         symbol: j.symbol,
         entryPrice: j.entryPrice,
@@ -254,15 +264,18 @@ export class SqlJournalRepository implements IJournalRepository {
     return formatedJournals;
   }
 
-  async listByAccountId(
-    accountId: string,
-    withDetails = false,
-  ): Promise<Journal[]> {
+  async listByAccountIds({
+    accountIds,
+    details = { withStrategy: false, withMt5Transactions: false },
+  }: {
+    accountIds: string[];
+    details: { withStrategy?: boolean; withMt5Transactions?: boolean };
+  }): Promise<Journal[]> {
     const tradeJournals = await prisma.journal.findMany({
-      where: { accountId },
+      where: { accountId: { in: accountIds } },
       include: {
-        strategy: true,
-        detailsMetaTrader5: withDetails,
+        strategy: details.withStrategy,
+        detailsMetaTrader5: details.withMt5Transactions,
       },
     });
 
@@ -271,6 +284,7 @@ export class SqlJournalRepository implements IJournalRepository {
         id: journal.id,
         accountId: journal.accountId,
         strategyId: journal.strategyId,
+        creationMethod: journal.creationMethod,
         externalTradeId: journal.externalTradeId,
         symbol: journal.symbol,
         entryPrice: journal.entryPrice,
@@ -298,7 +312,7 @@ export class SqlJournalRepository implements IJournalRepository {
       if (journal.strategy) {
         entity.setStrategy(Strategy.restore(journal.strategy));
       }
-      if (withDetails) {
+      if (journal.detailsMetaTrader5.length) {
         entity.setJournalDetailMt5(
           journal.detailsMetaTrader5.map(JournalDetailMT5.restore),
         );
@@ -315,6 +329,7 @@ export class SqlJournalRepository implements IJournalRepository {
         id: journal.id.getValue(),
         accountId: journal.accountId.getValue(),
         strategyId: journal.getStrategyId()?.getValue(),
+        creationMethod: journal.creationMethod as CreationMethod,
         externalTradeId: journal.externalTradeId,
         symbol: journal.symbol,
         entryPrice: journal.entryPrice,
@@ -350,6 +365,7 @@ export class SqlJournalRepository implements IJournalRepository {
             id: j.id.getValue(),
             accountId: j.accountId.getValue(),
             strategyId: j.getStrategyId()?.getValue(),
+            creationMethod: j.creationMethod as CreationMethod,
             externalTradeId: j.externalTradeId,
             symbol: j.symbol,
             entryPrice: j.entryPrice,

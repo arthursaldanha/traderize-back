@@ -55,6 +55,11 @@ enum Status {
   CANCELED
 }
 
+enum CreationMethod {
+  MANUAL
+  AUTOMATION
+}
+
 enum LearningCategory {
   PSYCHOLOGY
   TECHNICAL
@@ -159,9 +164,10 @@ model Strategy {
 }
 
 model Journal {
-  id              String    @id @default(uuid())
+  id              String         @id @default(uuid())
   accountId       String
   strategyId      String?
+  creationMethod  CreationMethod
   externalTradeId String
   symbol          String
   entryPrice      Decimal
@@ -182,8 +188,8 @@ model Journal {
   timeDateEnd     DateTime?
   tradeDuration   Int?
   notes           String?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
 
   account            Account            @relation(fields: [accountId], references: [id])
   strategy           Strategy?          @relation(fields: [strategyId], references: [id])

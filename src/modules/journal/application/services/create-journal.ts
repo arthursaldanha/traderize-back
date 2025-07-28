@@ -34,6 +34,7 @@ export class CreateJournalService {
     const tradeJournal = Journal.create({
       accountId: data.accountId,
       strategyId: data.strategyId || null,
+      creationMethod: 'MANUAL',
       externalTradeId: '', // TODO AJUSTAR ISSO AQUI
       symbol: data.asset,
       entryPrice: data.entryPrice,
