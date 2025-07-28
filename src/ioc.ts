@@ -1,5 +1,6 @@
 export const ioc = {
   useCases: {
+    dashboardCalculator: Symbol.for('DashboardCalculator'),
     analyzeDashboardDataUseCase: Symbol.for('AnalyzeDashboardDataUseCase'),
   },
   repositories: {

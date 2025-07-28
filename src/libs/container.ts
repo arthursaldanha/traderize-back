@@ -2,6 +2,11 @@ import { Container } from 'inversify';
 
 import { ioc } from '@/ioc';
 
+import {
+  AnalyzeDashboardDataUseCase,
+  DashboardCalculator,
+} from '@/modules/dashboard/application/useCases/analyze-dashboard';
+
 import { IAuthRepository, SqlAuthRepository } from '@/repositories/auth';
 import {
   IAccountRepository,
@@ -26,6 +31,16 @@ import {
 } from '@/repositories/strategy';
 
 const container = new Container();
+
+// Bindings - DASHBOARD CALCULATOR USECASE
+container.bind(ioc.useCases.dashboardCalculator).to(DashboardCalculator);
+
+// Bindings - DASHBOARD CALCULATOR USECASE
+container
+  .bind(ioc.useCases.analyzeDashboardDataUseCase)
+  .to(AnalyzeDashboardDataUseCase);
+
+// -----------------------------------------------------------------------------
 
 // Bindings - AUTH REPOSITORY
 container

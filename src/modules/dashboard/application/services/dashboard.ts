@@ -1,32 +1,14 @@
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 import { StatusCodes } from 'http-status-codes';
 
 import { ioc } from '@/ioc';
 import { CustomError } from '@/errors';
-import { Journal, type User } from '@/core/entities';
+import type { User } from '@/core/entities';
 import { IAccountRepository } from '@/repositories/account';
 import { IJournalRepository } from '@/repositories/journal';
-import type { DashboardAnalyticsDTO } from '../DTOs';
+import type { DashboardAnalyticsDTO } from '@/modules/dashboard/application/DTOs';
+import type { AnalyzeDashboardDataUseCase } from '@/modules/dashboard/application/useCases/analyze-dashboard';
 
-@injectable()
-export class AnalyzeDashboardDataUseCase {
-  execute(journals: Journal[]) {
-    // TODO: Implementar lógica de agrupamento, análise e cálculo
-    // Aqui você implementará toda a lógica de:
-    // - Agrupamento dos journals
-    // - Cálculos de métricas
-    // - Análises dos dados
-    // - Formatação dos resultados
-
-    return {
-      // Placeholder para estrutura de retorno
-      totalTrades: journals.length,
-      // ... outras métricas calculadas
-    };
-  }
-}
-
-@injectable()
 export class GetDashboardAnalyticsService {
   constructor(
     @inject(ioc.repositories.accountRepository)
@@ -79,7 +61,10 @@ export class GetDashboardAnalyticsService {
       details: { withMt5Transactions: true },
     });
 
-    const analyticsResult = this.analyzeDashboardDataUseCase.execute(journals);
+    const analyticsResult = this.analyzeDashboardDataUseCase.execute(
+      journals,
+      accountIdsToAnalyze.length,
+    );
 
     return {
       success: true,
@@ -87,6 +72,8 @@ export class GetDashboardAnalyticsService {
       metadata: {
         accountsAnalyzed: accountIdsToAnalyze.length,
         totalJournals: journals.length,
+        closedTrades: journals.filter((j) => j.status === 'CLOSED').length,
+        openTrades: journals.filter((j) => j.status === 'OPEN').length,
       },
     };
   }

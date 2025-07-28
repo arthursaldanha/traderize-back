@@ -4,6 +4,7 @@ import { inject, injectable } from 'inversify';
 import { Decimal } from '@prisma/client/runtime/library';
 
 import { Journal } from '@/core/entities';
+import { ioc } from '@/ioc';
 
 dayjs.extend(duration);
 
@@ -94,9 +95,8 @@ export interface DashboardAnalyticsResult {
   };
 }
 
-// ==================== CALCULATOR SERVICE ====================
 @injectable()
-export class DashboardCalculatorService {
+export class DashboardCalculator {
   // Analisa se um trade é breakeven baseado na lógica do MT5
   private analyzeBreakevenTrade(journal: Journal): boolean {
     const details = journal.detailsMetaTrader5 || [];
@@ -438,12 +438,11 @@ export class DashboardCalculatorService {
   }
 }
 
-// ==================== MAIN USE CASE ====================
 @injectable()
 export class AnalyzeDashboardDataUseCase {
   constructor(
-    @inject('DashboardCalculatorService')
-    private calculator: DashboardCalculatorService,
+    @inject(ioc.useCases.dashboardCalculator)
+    private calculator: DashboardCalculator,
   ) {}
 
   execute(journals: Journal[], accountCount: number): DashboardAnalyticsResult {
