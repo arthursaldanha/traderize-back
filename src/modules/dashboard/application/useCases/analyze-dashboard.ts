@@ -87,7 +87,7 @@ export interface DashboardAnalyticsResult {
   recentClosedTrades: Journal[];
   recentOpenTrades: Journal[];
   dailyTradeCount: DailyTradeCount[];
-  capitalEvolution?: CapitalEvolution[]; // Só quando uma conta
+  capitalEvolution?: CapitalEvolution[];
   drawdown: {
     maxDrawdown: Decimal;
     currentDrawdown: Decimal;
@@ -97,7 +97,6 @@ export interface DashboardAnalyticsResult {
 
 @injectable()
 export class DashboardCalculator {
-  // Analisa se um trade é breakeven baseado na lógica do MT5
   private analyzeBreakevenTrade(journal: Journal): boolean {
     const details = journal.detailsMetaTrader5 || [];
     const exitDetail = details.find((d) => d.entry === 'OUT');
@@ -117,7 +116,6 @@ export class DashboardCalculator {
     }
   }
 
-  // Analisa cada trade individualmente
   private analyzeIndividualTrade(journal: Journal): TradeAnalysis {
     const result = journal.total || new Decimal(0);
     const isBreakeven = this.analyzeBreakevenTrade(journal);
@@ -134,10 +132,15 @@ export class DashboardCalculator {
 
   // 1. Net P&L
   calculateNetPnL(journals: Journal[]): NetPnLResult {
-    const total = journals.reduce(
-      (acc, journal) => acc.add(journal.total || new Decimal(0)),
+    const result = journals.reduce(
+      (acc, journal) => acc.add(journal.result || new Decimal(0)),
       new Decimal(0),
     );
+    const commission = journals.reduce(
+      (acc, journal) => acc.add(journal.commission || new Decimal(0)),
+      new Decimal(0),
+    );
+    const total = result.add(commission);
 
     return {
       total,
@@ -455,8 +458,8 @@ export class AnalyzeDashboardDataUseCase {
     const profitFactor = this.calculator.calculateProfitFactor(closedJournals);
     const winRate = this.calculator.calculateWinRate(closedJournals);
     const avgTrades = this.calculator.calculateAvgTrades(closedJournals);
-    const accountBalance =
-      this.calculator.calculateAccountBalance(closedJournals);
+    // AQUI EU CALCULEI TUDO
+    const accountBalance = this.calculator.calculateAccountBalance(journals);
     const radarMetrics = this.calculator.calculateRadarMetrics(closedJournals);
     const dailyTradeCount =
       this.calculator.calculateDailyTradeCount(closedJournals);

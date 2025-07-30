@@ -104,13 +104,16 @@ export class UpsertJournalByExternalTradeIdService {
       const takePrices = [entry.takePrice];
       const investment = new Decimal(entry.investment ?? 0);
       const riskRewardRatio = entry.riskRewardRatio;
-      const fee = new Decimal(exit?.fee ?? 0);
-      const swap = new Decimal(exit?.swap ?? 0);
-      const commission = new Decimal(entry.commission);
+      const fee = new Decimal(exit?.fee ?? 0).times(-1);
+      const swap = new Decimal(exit?.swap ?? 0).times(-1).neg();
+      const commission = new Decimal(entry.commission)
+        .add(new Decimal(exit?.commission ?? 0))
+        .times(-1);
       const result = new Decimal(exit?.result ?? 0);
-      const total = [result, commission, swap, fee]
-        .map((v) => new Decimal(v ?? 0))
-        .reduce((acc, cur) => acc.add(cur), new Decimal(0));
+      const total = [result, commission, swap, fee].reduce(
+        (acc, cur) => acc.add(cur),
+        new Decimal(0),
+      );
       const timeDateStart = dayjs(entry.time, 'YYYY.MM.DD HH:mm:ss').toDate();
       const timeDateEnd = exit
         ? dayjs(exit.time, 'YYYY.MM.DD HH:mm:ss').toDate()
@@ -140,9 +143,9 @@ export class UpsertJournalByExternalTradeIdService {
           investment: sd.investment ?? 0,
           riskRewardRatio: sd.riskRewardRatio ?? 0,
           result: sd.result,
-          commission: sd.commission,
-          swap: sd.swap,
-          fee: sd.fee,
+          commission: new Decimal(sd.commission).times(-1).neg(),
+          swap: new Decimal(sd.swap).times(-1).neg(),
+          fee: new Decimal(sd.fee).times(-1).neg(),
           time: sd.time,
           type: sd.type,
           entry: sd.entry,

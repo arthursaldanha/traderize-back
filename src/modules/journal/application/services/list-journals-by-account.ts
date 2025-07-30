@@ -29,8 +29,10 @@ export class ListJournalByAccountIdService {
       });
     }
 
-    const tradeJournals =
-      await this.journalRepository.listByAccountId(accountId);
+    const tradeJournals = await this.journalRepository.listByAccountIds({
+      accountIds: [accountId],
+      details: {},
+    });
 
     return tradeJournals;
   }

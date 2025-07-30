@@ -21,7 +21,7 @@ export class GetDashboardAnalyticsService {
     private analyzeDashboardDataUseCase: AnalyzeDashboardDataUseCase,
   ) {}
 
-  async execute({ data }: { data: DashboardAnalyticsDTO & { user: User } }) {
+  async execute(data: DashboardAnalyticsDTO & { user: User }) {
     const userAccounts = await this.accountRepository.listByUserId(
       data.user.id.getValue(),
     );
