@@ -10,7 +10,7 @@ export class DashboardController {
 
     const analytics = await container
       .resolve(GetDashboardAnalyticsService)
-      .execute({ user, accountIds: ['01983f8e-937c-73b5-b50f-52b9425764d7'] });
+      .execute({ user, accountIds: ['01969c61-26c9-760d-81ff-2fd4ed2b0cab'] });
 
     res.status(201).json(analytics);
   }
