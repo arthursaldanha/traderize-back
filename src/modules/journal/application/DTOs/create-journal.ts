@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 const createJournalSchema = z.object({
   accountId: z.string(),
-  strategyId: z.string().uuid().nullable(),
+  strategies: z.array(z.string().uuid()).default([]),
   asset: z.string().min(1, 'Asset name must not be empty'),
   entryPrice: z.number().positive('Entry price must be greater than zero'),
   stopPrice: z.number().positive('Stop price must be greater than zero'),

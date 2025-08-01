@@ -181,19 +181,18 @@ export class UpsertJournalByExternalTradeIdService {
           timeDateStart,
           timeDateEnd,
           tradeDuration,
+          strategies: [],
         });
         journalsToCreate.push(journalToCreate);
       } else {
         const imageUrls = existentJournal.imageUrls || [];
         const notes = existentJournal.notes || '';
-        const strategyId = existentJournal.getStrategyId()?.getValue();
 
         const journalToUpdate = Journal.restore({
           id: existentJournal.id.getValue(),
           accountId: existentJournal.accountId.getValue(),
           creationMethod: 'AUTOMATION',
           externalTradeId: existentJournal.externalTradeId,
-          strategyId,
           symbol,
           direction,
           status,
@@ -213,6 +212,7 @@ export class UpsertJournalByExternalTradeIdService {
           timeDateStart,
           timeDateEnd,
           tradeDuration,
+          strategies: existentJournal.strategies ?? [],
         });
         journalsToUpdate.push(journalToUpdate);
       }

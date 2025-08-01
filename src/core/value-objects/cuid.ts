@@ -4,6 +4,8 @@ import { init, isCuid } from '@paralleldrive/cuid2';
 
 import { CustomError } from '@/errors';
 
+const createCuid = init({ length: 16 });
+
 export class Cuid {
   protected readonly value: any;
 
@@ -14,7 +16,7 @@ export class Cuid {
         statusCode: StatusCodes.BAD_REQUEST,
       });
     }
-    this.value = id || init({ length: 16 });
+    this.value = id || createCuid();
   }
 
   getValue(): string {

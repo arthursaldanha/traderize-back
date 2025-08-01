@@ -161,7 +161,7 @@ export class DashboardCalculator {
       isBreakeven,
       result,
       duration: journal.tradeDuration || 0,
-      hasStrategy: !!journal.getStrategyId(),
+      hasStrategy: !!journal.getStrategies().length,
     };
   }
 

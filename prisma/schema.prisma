@@ -67,7 +67,7 @@ enum LearningCategory {
 }
 
 model User {
-  id              String   @id @default(cuid())
+  id              String   @id
   planId          String?
   firstName       String
   lastName        String
@@ -145,7 +145,6 @@ model Account {
   @@map("accounts")
 }
 
-// Usado para descrever estratégias de trading
 model Strategy {
   id          String   @id @default(uuid())
   userId      String
@@ -156,9 +155,8 @@ model Strategy {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  journals Journal[]
-
-  user User @relation(fields: [userId], references: [id])
+  user     User      @relation(fields: [userId], references: [id])
+  journals Journal[] @relation("JournalStrategies")
 
   @@map("strategies")
 }
@@ -166,7 +164,6 @@ model Strategy {
 model Journal {
   id              String         @id @default(uuid())
   accountId       String
-  strategyId      String?
   creationMethod  CreationMethod
   externalTradeId String
   symbol          String
@@ -192,12 +189,11 @@ model Journal {
   updatedAt       DateTime       @updatedAt
 
   account            Account            @relation(fields: [accountId], references: [id])
-  strategy           Strategy?          @relation(fields: [strategyId], references: [id])
+  strategies         Strategy[]         @relation("JournalStrategies")
   detailsMetaTrader5 JournalDetailMT5[] @relation("JournalToDetailMT5")
 
   @@unique([accountId, externalTradeId])
   @@index([accountId])
-  @@index([accountId, strategyId])
   @@index([accountId, externalTradeId])
   @@index([accountId, symbol])
   @@index([accountId, symbol, direction])

@@ -23,7 +23,6 @@ function decimalArrayToString(vals: Decimal[]): string[] {
 export class Journal extends Entity {
   readonly id: Uuid;
   readonly accountId: Uuid;
-  private strategyId: Uuid | null;
   creationMethod: string;
   externalTradeId: string;
   symbol: string;
@@ -48,13 +47,12 @@ export class Journal extends Entity {
   createdAt: Date;
   updatedAt: Date;
 
-  strategy: Strategy | null = null;
-  detailsMetaTrader5: JournalDetailMT5[];
+  strategies: Strategy[] = [];
+  detailsMetaTrader5: JournalDetailMT5[] = [];
 
   constructor(
     id: Uuid,
     accountId: Uuid,
-    strategyId: Uuid | null,
     creationMethod: string,
     externalTradeId: string,
     symbol: string,
@@ -78,12 +76,12 @@ export class Journal extends Entity {
     notes: string | null,
     createdAt: Date,
     updatedAt: Date,
+    strategies?: Strategy[],
     detailsMetaTrader5?: JournalDetailMT5[],
   ) {
     super();
     this.id = id;
     this.accountId = accountId;
-    this.strategyId = strategyId;
     this.creationMethod = creationMethod;
     this.externalTradeId = externalTradeId;
     this.symbol = symbol;
@@ -107,13 +105,13 @@ export class Journal extends Entity {
     this.notes = notes;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
+    this.strategies = strategies ?? [];
     this.detailsMetaTrader5 = detailsMetaTrader5 ?? [];
   }
 
   static create(data: {
     id?: string;
     accountId: string;
-    strategyId?: string | null;
     creationMethod: string;
     externalTradeId: string;
     symbol: string;
@@ -137,12 +135,12 @@ export class Journal extends Entity {
     notes?: string | null;
     createdAt?: Date;
     updatedAt?: Date;
+    strategies?: Strategy[];
     detailsMetaTrader5?: JournalDetailMT5[];
   }) {
     return new Journal(
       data.id ? new Uuid(data.id) : new Uuid(),
       new Uuid(data.accountId),
-      data.strategyId ? new Uuid(data.strategyId) : null,
       data.creationMethod,
       data.externalTradeId,
       data.symbol,
@@ -166,23 +164,19 @@ export class Journal extends Entity {
       data.notes ?? null,
       data.createdAt || new Date(),
       data.updatedAt || new Date(),
+      data.strategies ?? [],
       data.detailsMetaTrader5 ?? [],
     );
   }
 
   static restore = Journal.create;
 
-  getStrategyId(): Uuid | null {
-    return this.strategyId;
+  getStrategies(): Strategy[] {
+    return this.strategies;
   }
 
-  getStrategy(): Strategy | null {
-    return this.strategy;
-  }
-
-  setStrategy(strategy: Strategy | null) {
-    this.strategy = strategy;
-    this.strategyId = strategy?.id || null;
+  setStrategies(strategies: Strategy[]) {
+    this.strategies = strategies;
   }
 
   getJournalDetailMt5(): JournalDetailMT5[] {
@@ -194,7 +188,6 @@ export class Journal extends Entity {
   }
 
   updateDetails(data: {
-    strategyId?: string | null;
     externalTradeId: string;
     entryPrice: string | number | Decimal;
     stopPrice: string | number | Decimal;
@@ -214,9 +207,9 @@ export class Journal extends Entity {
     timeDateEnd?: Date | null;
     tradeDuration?: number | null;
     notes?: string | null;
+    strategies?: Strategy[];
     detailsMetaTrader5?: JournalDetailMT5[];
   }): void {
-    this.strategyId = data.strategyId ? new Uuid(data.strategyId) : null;
     this.externalTradeId = data.externalTradeId;
     this.entryPrice = toDecimal(data.entryPrice);
     this.stopPrice = toDecimal(data.stopPrice);
@@ -236,6 +229,7 @@ export class Journal extends Entity {
     this.timeDateEnd = data.timeDateEnd ?? null;
     this.tradeDuration = data.tradeDuration ?? null;
     this.notes = data.notes ?? null;
+    this.strategies = data.strategies ?? [];
     this.detailsMetaTrader5 = data.detailsMetaTrader5 ?? [];
     this.updatedAt = new Date();
   }
@@ -244,7 +238,6 @@ export class Journal extends Entity {
     return {
       id: this.id.getValue(),
       accountId: this.accountId.getValue(),
-      strategyId: this.strategyId?.getValue() || null,
       creationMethod: this.creationMethod,
       externalTradeId: this.externalTradeId,
       symbol: this.symbol,
@@ -266,10 +259,10 @@ export class Journal extends Entity {
       timeDateEnd: this.timeDateEnd ? this.timeDateEnd.toISOString() : null,
       tradeDuration: this.tradeDuration,
       notes: this.notes,
-      strategy: this.strategy ? this.strategy.toJSON() : null,
+      strategies: this.strategies?.map((s) => s.toJSON()) ?? [],
+      detailsMetaTrader5: this.detailsMetaTrader5?.map((d) => d.toJSON()) ?? [],
       createdAt: this.createdAt.toISOString(),
       updatedAt: this.updatedAt.toISOString(),
-      detailsMetaTrader5: this.detailsMetaTrader5?.map((d) => d.toJSON()) ?? [],
     };
   }
 }

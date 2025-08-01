@@ -31,11 +31,17 @@ export class SqlStrategyRepository implements IStrategyRepository {
     return Strategy.restore(strategy);
   }
 
+  async listByIds(ids: string[]): Promise<Strategy[]> {
+    const strategies = await prisma.strategy.findMany({
+      where: { id: { in: ids } },
+    });
+    return strategies.map(Strategy.restore);
+  }
+
   async listByUserId(userId: string): Promise<Strategy[]> {
     const strategies = await prisma.strategy.findMany({
       where: { userId },
     });
-
     return strategies.map(Strategy.restore);
   }
 

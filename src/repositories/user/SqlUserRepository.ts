@@ -34,7 +34,7 @@ export class SqlUserRepository implements IUserRepository {
         name: user.plan?.name,
         description: user.plan?.description,
         price: Number(user.plan?.price),
-        features: JSON.stringify(user.plan?.features),
+        features: user.plan?.features,
         createdAt: user.plan?.createdAt,
         updatedAt: user.plan?.updatedAt,
       });

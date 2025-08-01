@@ -33,7 +33,10 @@ export class SqlSubscriptionPlanRepository
         name: plan.name,
         description: plan.description,
         price: plan.price,
-        features: plan.features,
+        features:
+          typeof plan.features === 'string'
+            ? JSON.parse(plan.features)
+            : plan.features,
         createdAt: plan.createdAt,
         updatedAt: plan.updatedAt,
       },
@@ -47,7 +50,10 @@ export class SqlSubscriptionPlanRepository
         name: plan.name,
         description: plan.description,
         price: plan.price,
-        features: plan.features,
+        features:
+          typeof plan.features === 'string'
+            ? JSON.parse(plan.features)
+            : plan.features,
         updatedAt: plan.updatedAt,
       },
     });

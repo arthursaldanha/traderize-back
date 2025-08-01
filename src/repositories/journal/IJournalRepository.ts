@@ -7,8 +7,7 @@ export interface IJournalRepository {
   findByExternalTradeId(params: {
     accountId: string;
     externalTradeId: string;
-    withStrategy?: false;
-    withDetails?: false;
+    details: { withStrategy?: boolean; withMt5Transactions?: boolean };
   }): Promise<Journal | null>;
   listByAccountIdAndExternalTradeIds(params: {
     accountId: string;

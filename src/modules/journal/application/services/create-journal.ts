@@ -4,9 +4,10 @@ import { StatusCodes } from 'http-status-codes';
 import { ioc } from '@/ioc';
 
 import { CustomError } from '@/errors';
-import { Journal, User } from '@/core/entities';
+import { Journal, User, Strategy } from '@/core/entities';
 import { IAccountRepository } from '@/repositories/account';
 import { IJournalRepository } from '@/repositories/journal';
+import { IStrategyRepository } from '@/repositories/strategy';
 import { CreateJournalDTO } from '@/modules/journal/application/DTOs';
 
 @injectable()
@@ -14,6 +15,9 @@ export class CreateJournalService {
   constructor(
     @inject(ioc.repositories.accountRepository)
     private accountRepository: IAccountRepository,
+
+    @inject(ioc.repositories.strategyRepository)
+    private strategyRepository: IStrategyRepository,
 
     @inject(ioc.repositories.journalRepository)
     private journalRepository: IJournalRepository,
@@ -31,9 +35,15 @@ export class CreateJournalService {
       });
     }
 
+    let strategies: Strategy[] = [];
+
+    if (data.strategies.length) {
+      strategies = await this.strategyRepository.listByIds(data.strategies);
+    }
+
     const tradeJournal = Journal.create({
       accountId: data.accountId,
-      strategyId: data.strategyId || null,
+      strategies,
       creationMethod: 'MANUAL',
       externalTradeId: '', // TODO AJUSTAR ISSO AQUI
       symbol: data.asset,

@@ -1,16 +1,18 @@
 import { Router } from 'express';
 
 import { authRoutes } from '@/modules/auth/infra/routes/authRoutes';
+import { userRoutes } from '@/modules/user/infra/routes/userRoutes';
+import { webhookRoutes } from '@/modules/webhook/infra/routes/webhookRoutes';
 import { accountRoutes } from '@/modules/account/infra/routes/accountRoutes';
-import { dashboardRoutes } from '@/modules/dashboard/infra/routes/dashboardRoutes';
 import { journalRoutes } from '@/modules/journal/infra/routes/journalRoutes';
+import { dashboardRoutes } from '@/modules/dashboard/infra/routes/dashboardRoutes';
 import { strategiesRoutes } from '@/modules/strategy/infra/routes/strategiesRoutes';
 import { subscriptionPlansRoutes } from '@/modules/subscription-plans/infra/routes/subscriptionPlansRoutes';
-import { webhookRoutes } from '@/modules/webhook/infra/routes/webhookRoutes';
 
 const routes: Router = Router();
 
 routes.use('/auth', authRoutes);
+routes.use('/user', userRoutes);
 routes.use('/subscription-plans', subscriptionPlansRoutes);
 routes.use('/accounts', accountRoutes);
 routes.use('/dashboard', dashboardRoutes);

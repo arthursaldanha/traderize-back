@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 const updateJournalSchema = z.object({
   accountId: z.string().uuid(),
-  strategyId: z.string().uuid().nullable(),
+  strategies: z.array(z.string().uuid()).default([]),
   entryPrice: z.number().positive('Entry price must be greater than zero'),
   stopPrice: z.number().positive('Stop price must be greater than zero'),
   takePrices: z.array(

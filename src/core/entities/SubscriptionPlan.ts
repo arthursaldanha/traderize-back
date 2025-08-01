@@ -7,7 +7,7 @@ export class SubscriptionPlan extends Entity {
     readonly name: string,
     readonly description: string | null,
     readonly price: number,
-    readonly features: string,
+    readonly features: unknown,
     readonly createdAt: Date,
     readonly updatedAt: Date,
   ) {
@@ -19,7 +19,7 @@ export class SubscriptionPlan extends Entity {
     name: string;
     description?: string | null;
     price: number;
-    features: Record<string, unknown> | string;
+    features: unknown;
     createdAt?: Date;
     updatedAt?: Date;
   }) {
@@ -28,9 +28,7 @@ export class SubscriptionPlan extends Entity {
       data.name,
       data.description || null,
       data.price,
-      typeof data.features === 'string'
-        ? data.features
-        : JSON.stringify(data.features),
+      data.features,
       data.createdAt || new Date(),
       data.updatedAt || new Date(),
     );
@@ -44,7 +42,7 @@ export class SubscriptionPlan extends Entity {
       name: this.name,
       description: this.description,
       price: this.price,
-      features: JSON.parse(this.features),
+      features: JSON.parse(this.features as string),
       createdAt: this.createdAt.toISOString(),
       updatedAt: this.updatedAt.toISOString(),
     };
